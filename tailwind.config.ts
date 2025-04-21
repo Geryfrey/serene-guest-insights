@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -22,99 +23,74 @@ export default {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
+				background: '#f9fafb',  // Subtle offwhite
+				foreground: "#1b2126",
+
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
-				},
-				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
-				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
+					DEFAULT: '#243949', // modern navy blue
+					foreground: '#f8fafc'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					DEFAULT: '#f6f7fa', // light accent
+					foreground: '#243949'
 				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
+				secondary: {
+					DEFAULT: '#8E9196', // neutral gray
+					foreground: '#fafafa'
 				},
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
+				muted: {
+					DEFAULT: '#f2f3f5',
+					foreground: '#6c6e77'
 				},
-				navy: {
-					50: '#e6f1ff',
-					100: '#bfdaff',
-					200: '#9bc3ff',
-					300: '#7aacff',
-					400: '#5c95f5',
-					500: '#3d7eeb',
-					600: '#1a5ecd',
-					700: '#0F3460',
-					800: '#002a77',
-					900: '#001845',
+				destructive: {
+					DEFAULT: '#f44336', // elegant red
+					foreground: '#f9fafb'
 				},
 				gold: {
-					50: '#fff9e6',
-					100: '#ffefc0',
-					200: '#ffe599',
-					300: '#ffdb71',
-					400: '#f8d149',
+					DEFAULT: '#E6B325',
+					400: '#fbe898',
 					500: '#E6B325',
-					600: '#d49900',
-					700: '#aa7700',
-					800: '#805700',
-					900: '#553700',
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				}
+				success: "#7BC47F",
+				card: {
+					DEFAULT: "#ffffff",
+					foreground: "#191d21",
+				},
+				navy: {
+					DEFAULT: "#243949",
+					100: "#f9fbfc",
+					200: "#c8d4e4",
+					400: "#5c95f5",
+					500: "#3d7eeb",
+					700: "#243949",
+					900: "#16202a",
+				},
+			},
+			fontFamily: {
+				'sans': ['Inter', 'ui-sans-serif', 'system-ui'],
+				'serif': ['Playfair Display', 'serif'],
 			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				lg: '1rem',
+				md: '0.75rem',
+				sm: '0.5rem'
 			},
 			keyframes: {
-				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+				'fade-in': {
+					'0%': { opacity: '0', transform: 'translateY(20px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
 				},
-				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+				'slide-up': {
+					'0%': { opacity: 0, transform: 'translateY(40px)' },
+					'100%': { opacity: 1, transform: 'translateY(0)' }
 				}
 			},
 			animation: {
-				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'fade-in': 'fade-in 0.6s ease',
+				'slide-up': 'slide-up 0.6s cubic-bezier(0.22, 1, 0.36, 1)',
 			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+

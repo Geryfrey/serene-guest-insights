@@ -12,10 +12,11 @@ import FeedbackPage from "./pages/FeedbackPage";
 import Reports from "./pages/Reports";
 import AdminPanel from "./pages/AdminPanel";
 import GuestFeedback from "./pages/GuestFeedback";
+import Contact from "./pages/Contact";
+import Blog from "./pages/Blog";
 
 const queryClient = new QueryClient();
 
-// Protected route component
 const ProtectedRoute = ({ 
   children, 
   allowedRoles = ["admin", "manager"]
@@ -49,7 +50,9 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/feedback" element={<GuestFeedback />} />
             <Route path="/feedback/:hotelId" element={<GuestFeedback />} />
-            
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/blog" element={<Blog />} />
+
             {/* Protected routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
