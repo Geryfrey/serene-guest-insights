@@ -19,6 +19,9 @@ export default {
 		},
 		extend: {
 			colors: {
+				border: {
+					DEFAULT: 'hsl(var(--border))', // Uses the existing CSS variable
+				},
 				background: '#F4F7F6',  // Soft off-white
 				foreground: '#2C3E50',   // Deep charcoal blue
 
