@@ -1,7 +1,8 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-import { ArrowRight, BookOpen, Mail } from "lucide-react";
+import { ArrowRight, BookOpen, Mail, CheckCircle, BarChart, BellRing, Users, Image as ImageIcon } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import Logo from "@/components/layout/Logo";
 
@@ -42,7 +43,7 @@ const features = [
     description: "Secure access for managers, guests, and admins—with granular controls.",
   },
   {
-    icon: <Image className="h-10 w-10 text-blue-400" />,
+    icon: <ImageIcon className="h-10 w-10 text-blue-400" />,
     title: "Integrated Sources",
     description: "Pull feedback from Google Reviews and in-room devices effortlessly.",
   },
