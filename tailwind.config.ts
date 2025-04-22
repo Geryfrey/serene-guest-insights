@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,51 +19,43 @@ export default {
 		},
 		extend: {
 			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				background: '#f9fafb',  // Subtle offwhite
-				foreground: "#1b2126",
+				background: '#F4F7F6',  // Soft off-white
+				foreground: '#2C3E50',   // Deep charcoal blue
 
 				primary: {
-					DEFAULT: '#243949', // modern navy blue
-					foreground: '#f8fafc'
-				},
-				accent: {
-					DEFAULT: '#f6f7fa', // light accent
-					foreground: '#243949'
+					DEFAULT: '#34495E',   // Elegant navy blue
+					foreground: '#ECF0F1'  // Light gray
 				},
 				secondary: {
-					DEFAULT: '#8E9196', // neutral gray
-					foreground: '#fafafa'
+					DEFAULT: '#95A5A6',   // Soft gray
+					foreground: '#2C3E50'
+				},
+				accent: {
+					DEFAULT: '#3498DB',   // Soft blue
+					foreground: '#FFFFFF'
 				},
 				muted: {
-					DEFAULT: '#f2f3f5',
-					foreground: '#6c6e77'
+					DEFAULT: '#BDC3C7',   // Light gray
+					foreground: '#34495E'
 				},
 				destructive: {
-					DEFAULT: '#f44336', // elegant red
-					foreground: '#f9fafb'
+					DEFAULT: '#E74C3C',   // Soft red
+					foreground: '#FFFFFF'
 				},
 				gold: {
-					DEFAULT: '#E6B325',
-					400: '#fbe898',
-					500: '#E6B325',
-				},
-				success: "#7BC47F",
-				card: {
-					DEFAULT: "#ffffff",
-					foreground: "#191d21",
+					DEFAULT: '#F39C12',   // Warm gold
+					400: '#F1C40F',
+					500: '#F39C12'
 				},
 				navy: {
-					DEFAULT: "#243949",
-					100: "#f9fbfc",
-					200: "#c8d4e4",
-					400: "#5c95f5",
-					500: "#3d7eeb",
-					700: "#243949",
-					900: "#16202a",
-				},
+					DEFAULT: '#2C3E50',
+					100: '#ECF0F1',
+					200: '#BDC3C7',
+					400: '#7F8C8D',
+					500: '#34495E',
+					700: '#2C3E50',
+					900: '#233240'
+				}
 			},
 			fontFamily: {
 				'sans': ['Inter', 'ui-sans-serif', 'system-ui'],
@@ -93,4 +84,3 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-
