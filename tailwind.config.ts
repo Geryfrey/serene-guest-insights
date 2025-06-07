@@ -23,47 +23,47 @@ export default {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
-				background: '#f9fafb',  // Subtle offwhite
-				foreground: "#1b2126",
+				background: '#ffffff',  // Pure white
+				foreground: "#000000",  // Pure black
 
 				primary: {
-					DEFAULT: '#243949', // modern navy blue
-					foreground: '#f8fafc'
+					DEFAULT: '#000000', // Pure black
+					foreground: '#ffffff' // White text on black
 				},
 				accent: {
-					DEFAULT: '#f6f7fa', // light accent
-					foreground: '#243949'
+					DEFAULT: '#ffd700', // Gold accent
+					foreground: '#000000' // Black text on gold
 				},
 				secondary: {
-					DEFAULT: '#8E9196', // neutral gray
-					foreground: '#fafafa'
+					DEFAULT: '#f5f5f5', // Very light gray for subtle backgrounds
+					foreground: '#000000'
 				},
 				muted: {
-					DEFAULT: '#f2f3f5',
-					foreground: '#6c6e77'
+					DEFAULT: '#f8f8f8',
+					foreground: '#666666'
 				},
 				destructive: {
-					DEFAULT: '#f44336', // elegant red
-					foreground: '#f9fafb'
+					DEFAULT: '#ff0000', // Pure red for errors
+					foreground: '#ffffff'
 				},
 				gold: {
-					DEFAULT: '#E6B325',
-					400: '#fbe898',
-					500: '#E6B325',
+					DEFAULT: '#ffd700',
+					400: '#ffe55c',
+					500: '#ffd700',
 				},
-				success: "#7BC47F",
+				success: "#00ff00", // Pure green for success
 				card: {
 					DEFAULT: "#ffffff",
-					foreground: "#191d21",
+					foreground: "#000000",
 				},
 				navy: {
-					DEFAULT: "#243949",
-					100: "#f9fbfc",
-					200: "#c8d4e4",
-					400: "#5c95f5",
-					500: "#3d7eeb",
-					700: "#243949",
-					900: "#16202a",
+					DEFAULT: "#000000", // Replace navy with black
+					100: "#f8f8f8",
+					200: "#e0e0e0",
+					400: "#808080",
+					500: "#666666",
+					700: "#000000",
+					900: "#000000",
 				},
 			},
 			fontFamily: {
@@ -93,4 +93,3 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-
