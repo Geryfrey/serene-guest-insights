@@ -2,10 +2,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-import { ArrowRight, BookOpen, Mail, CheckCircle, BarChart, BellRing, Users, Image as ImageIcon } from "lucide-react";
+import { ArrowRight, BarChart, BellRing, CheckCircle, Image, Users, BookOpen, Mail } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
-import Logo from "@/components/layout/Logo";
 
+// Dummy logos for hotel partners - use your own in production!
 const hotels = [
   {
     name: "Kigali Serena Hotel",
@@ -43,7 +43,7 @@ const features = [
     description: "Secure access for managers, guests, and admins—with granular controls.",
   },
   {
-    icon: <ImageIcon className="h-10 w-10 text-blue-400" />,
+    icon: <Image className="h-10 w-10 text-blue-400" />,
     title: "Integrated Sources",
     description: "Pull feedback from Google Reviews and in-room devices effortlessly.",
   },
@@ -85,22 +85,8 @@ export default function Landing() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
-        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-          <Logo />
-          <div className="flex items-center space-x-4">
-            <Link to="/blog" className="text-primary hover:text-accent transition-colors">Blog</Link>
-            <Link to="/contact" className="text-primary hover:text-accent transition-colors">Contact</Link>
-            <Button asChild variant="outline" className="border-primary text-primary">
-              <Link to="/login">Login</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
-      <div className="relative brand-gradient pb-16 pt-24 md:pt-32 mt-16">
+      <div className="relative brand-gradient pb-16 pt-24 md:pt-32">
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-10">
             <div className="md:w-2/3 space-y-6 text-center md:text-left">
