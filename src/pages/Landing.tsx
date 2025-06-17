@@ -24,32 +24,32 @@ const hotels = [
 
 const features = [
   {
-    icon: <CheckCircle className="h-10 w-10 text-green-500" />,
+    icon: <CheckCircle className="h-12 w-12 text-emerald-500" />,
     title: "Collect Feedback",
     description: "Simple, intuitive forms for guests to submit their feedback anytime.",
   },
   {
-    icon: <BarChart className="h-10 w-10 text-primary" />,
+    icon: <BarChart className="h-12 w-12 text-blue-500" />,
     title: "Analyze Sentiment",
     description: "AI-powered sentiment analysis to understand guest emotion.",
   },
   {
-    icon: <BellRing className="h-10 w-10 text-gold-500" />,
+    icon: <BellRing className="h-12 w-12 text-amber-500" />,
     title: "Real-Time Alerts",
     description: "Instant notifications for critical issues needing attention.",
   },
   {
-    icon: <Users className="h-10 w-10 text-primary" />,
+    icon: <Users className="h-12 w-12 text-purple-500" />,
     title: "Role-Based Access",
     description: "Secure access for managers, guests, and admins—with granular controls.",
   },
   {
-    icon: <Image className="h-10 w-10 text-primary" />,
+    icon: <Image className="h-12 w-12 text-indigo-500" />,
     title: "Integrated Sources",
     description: "Pull feedback from Google Reviews and in-room devices effortlessly.",
   },
   {
-    icon: <BookOpen className="h-10 w-10 text-primary" />,
+    icon: <BookOpen className="h-12 w-12 text-rose-500" />,
     title: "Rich Analytics",
     description: "Unlock deeper insights with trends, topics, and anomaly detection.",
   },
@@ -92,34 +92,33 @@ export default function Landing() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       {/* Navigation Bar */}
-      <nav className="bg-primary border-b border-gold-500">
+      <nav className="bg-white/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm sticky top-0 z-50">
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Link to="/" className="text-2xl font-serif font-bold text-primary-foreground">
-                Serene <span className="text-gold-500">Insights</span>
+              <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Serene <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Insights</span>
               </Link>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
+              <div className="ml-10 flex items-baseline space-x-6">
                 {navigationLinks.map((link) => (
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="text-primary-foreground hover:text-gold-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-lg text-sm font-medium transition-all hover:bg-blue-50"
                   >
                     {link.name}
                   </Link>
                 ))}
                 <Button
                   asChild
-                  variant="outline"
-                  className="border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-primary ml-4"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 shadow-lg hover:shadow-xl transition-all ml-4"
                 >
                   <Link to="/login">Manager Login</Link>
                 </Button>
@@ -130,7 +129,7 @@ export default function Landing() {
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-primary-foreground hover:text-gold-500 p-2"
+                className="text-slate-600 hover:text-blue-600 p-2 rounded-lg hover:bg-blue-50 transition-all"
               >
                 {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -139,13 +138,13 @@ export default function Landing() {
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <div className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gold-500">
+            <div className="md:hidden border-t border-slate-200">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 {navigationLinks.map((link) => (
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="text-primary-foreground hover:text-gold-500 block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                    className="text-slate-600 hover:text-blue-600 block px-3 py-2 rounded-lg text-base font-medium transition-all hover:bg-blue-50"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.name}
@@ -154,8 +153,7 @@ export default function Landing() {
                 <div className="pt-2">
                   <Button
                     asChild
-                    variant="outline"
-                    className="border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-primary w-full"
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 shadow-lg w-full"
                   >
                     <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Manager Login</Link>
                   </Button>
@@ -167,29 +165,33 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <div className="bg-primary text-primary-foreground py-20">
-        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
+        <div className="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
-            <h1 className="text-4xl md:text-6xl font-serif font-bold fade-in">
+            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
               Serene Insights for Hotels
             </h1>
-            <p className="text-xl md:text-2xl font-medium max-w-3xl mx-auto fade-in">
-              Transform guest feedback into <span className="text-gold-500">actionable insights</span>
+            <p className="text-xl md:text-2xl font-medium max-w-3xl mx-auto text-blue-100">
+              Transform guest feedback into <span className="text-amber-300 font-semibold">actionable insights</span>
               — powered by AI, loved by guests.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center mt-8 fade-in">
+            <div className="flex flex-wrap gap-6 justify-center mt-12">
               <Button
                 asChild
                 size="lg"
-                className="bg-gold-500 text-primary hover:bg-gold-400 transition"
+                className="bg-amber-500 hover:bg-amber-400 text-black font-semibold px-8 py-4 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all hover:scale-105"
               >
-                <Link to="/feedback">Submit Feedback</Link>
+                <Link to="/feedback" className="flex items-center">
+                  Submit Feedback
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
               <Button
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-4 text-lg rounded-xl backdrop-blur-sm"
               >
                 <Link to="/contact">Contact Us</Link>
               </Button>
@@ -199,14 +201,18 @@ export default function Landing() {
       </div>
 
       {/* Social Proof */}
-      <section className="py-12 px-4 bg-background">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-screen-xl mx-auto flex flex-col items-center">
-          <h3 className="text-lg font-serif tracking-wide mb-6 text-muted-foreground">Trusted by Rwanda's Leading Luxury Hotels</h3>
-          <div className="flex flex-row gap-8 flex-wrap items-center justify-center">
+          <h3 className="text-lg font-semibold tracking-wide mb-8 text-slate-500 uppercase">Trusted by Rwanda's Leading Luxury Hotels</h3>
+          <div className="flex flex-row gap-12 flex-wrap items-center justify-center">
             {hotels.map(hotel => (
-              <div key={hotel.name} className="flex flex-col items-center px-6 py-2">
-                <img src={hotel.logo} alt={hotel.name} className="h-12 md:h-16 object-contain grayscale hover:grayscale-0 transition" />
-                <span className="text-xs font-medium mt-2">{hotel.name}</span>
+              <div key={hotel.name} className="flex flex-col items-center px-6 py-4 group">
+                <img 
+                  src={hotel.logo} 
+                  alt={hotel.name} 
+                  className="h-16 md:h-20 object-contain grayscale group-hover:grayscale-0 transition-all duration-300 group-hover:scale-110" 
+                />
+                <span className="text-sm font-medium mt-3 text-slate-600 group-hover:text-slate-800 transition-colors">{hotel.name}</span>
               </div>
             ))}
           </div>
@@ -214,21 +220,23 @@ export default function Landing() {
       </section>
 
       {/* Features */}
-      <div id="features" className="py-16 px-4 sm:px-6 lg:px-8 bg-secondary">
-        <div className="max-w-screen-xl mx-auto space-y-10">
+      <div id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="max-w-screen-xl mx-auto space-y-12">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl font-serif font-bold">Platform Highlights</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold text-slate-800">Platform Highlights</h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Everything luxury hotels need to collect, analyze, and act on guest feedback.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, idx) => (
-              <Card key={idx} className="border-2 border-muted hover:border-gold-500 transition-colors">
-                <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
-                  <div className="p-3 rounded-full bg-gold-500/10">{feature.icon}</div>
-                  <h3 className="text-xl font-serif font-semibold">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
+              <Card key={idx} className="group border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white/80 backdrop-blur-sm">
+                <CardContent className="p-8 flex flex-col items-center text-center space-y-6">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-inner group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800">{feature.title}</h3>
+                  <p className="text-slate-600 leading-relaxed">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -237,17 +245,22 @@ export default function Landing() {
       </div>
 
       {/* How it Works */}
-      <section id="how-it-works" className="py-20 px-4 bg-background">
+      <section id="how-it-works" className="py-24 px-4 bg-white">
         <div className="max-w-screen-xl mx-auto">
-          <h2 className="text-3xl font-serif font-bold text-center mb-12">How It Works</h2>
+          <h2 className="text-4xl font-bold text-center mb-16 text-slate-800">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-12">
             {howItWorks.map(({step, title, desc}) => (
-              <div key={step} className="flex flex-col items-center text-center group border-2 border-muted rounded-lg p-8 hover:border-gold-500 transition-colors">
-                <div className="w-20 h-20 flex items-center justify-center rounded-full bg-gold-500 text-primary mb-6 transition group-hover:scale-105">
-                  <span className="text-2xl font-bold">{step}</span>
+              <div key={step} className="flex flex-col items-center text-center group">
+                <div className="relative mb-8">
+                  <div className="w-24 h-24 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-xl group-hover:shadow-2xl transition-all group-hover:scale-110">
+                    <span className="text-3xl font-bold">{step}</span>
+                  </div>
+                  {step < 3 && (
+                    <div className="hidden md:block absolute top-12 left-24 w-32 h-0.5 bg-gradient-to-r from-blue-200 to-indigo-200"></div>
+                  )}
                 </div>
-                <h3 className="font-serif text-xl font-semibold mb-4">{title}</h3>
-                <p className="text-muted-foreground">{desc}</p>
+                <h3 className="text-2xl font-bold mb-4 text-slate-800">{title}</h3>
+                <p className="text-slate-600 leading-relaxed text-lg">{desc}</p>
               </div>
             ))}
           </div>
@@ -255,23 +268,23 @@ export default function Landing() {
       </section>
 
       {/* CTA Section */}
-      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gold-500 text-primary">
+      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white">
         <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="md:w-2/3 space-y-4">
-            <h2 className="text-2xl md:text-3xl font-serif font-bold">Ready to transform your hotel's reputation?</h2>
-            <p className="text-lg font-medium">
+          <div className="md:w-2/3 space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold">Ready to transform your hotel's reputation?</h2>
+            <p className="text-xl font-medium text-orange-100">
               Contact us or join other hotels using Serene Insights to create remarkable guest experiences.
             </p>
           </div>
-          <div className="md:w-1/3 flex flex-row gap-4 justify-center md:justify-end">
-            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 transition">
-              <Link to="/contact" className="flex items-center">
+          <div className="md:w-1/3 flex flex-col gap-4 w-full md:w-auto">
+            <Button asChild size="lg" className="bg-white text-orange-600 hover:bg-orange-50 font-semibold shadow-lg hover:shadow-xl transition-all">
+              <Link to="/contact" className="flex items-center justify-center">
                 Contact Us
                 <Mail className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-primary border-primary hover:bg-primary hover:text-primary-foreground">
-              <Link to="/blog" className="flex items-center">
+            <Button asChild size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-orange-600 font-semibold backdrop-blur-sm">
+              <Link to="/blog" className="flex items-center justify-center">
                 Read Blog
                 <BookOpen className="ml-2 h-5 w-5" />
               </Link>
@@ -281,18 +294,19 @@ export default function Landing() {
       </div>
 
       {/* Footer */}
-      <footer className="py-8 px-4 sm:px-6 lg:px-8 bg-primary text-primary-foreground">
+      <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white">
         <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-xl font-serif font-semibold">
-            Serene <span className="text-gold-500">Insights</span>
+          <div className="text-2xl font-bold">
+            <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Serene</span>
+            <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent ml-1">Insights</span>
           </div>
-          <div className="flex gap-6">
-            <Link to="/feedback" className="hover:text-gold-500 transition-colors">Submit Feedback</Link>
-            <Link to="/login" className="hover:text-gold-500 transition-colors">Manager Login</Link>
-            <Link to="/contact" className="hover:text-gold-500 transition-colors">Contact Us</Link>
-            <Link to="/blog" className="hover:text-gold-500 transition-colors">Blog</Link>
+          <div className="flex gap-8">
+            <Link to="/feedback" className="hover:text-amber-400 transition-colors font-medium">Submit Feedback</Link>
+            <Link to="/login" className="hover:text-blue-400 transition-colors font-medium">Manager Login</Link>
+            <Link to="/contact" className="hover:text-indigo-400 transition-colors font-medium">Contact Us</Link>
+            <Link to="/blog" className="hover:text-purple-400 transition-colors font-medium">Blog</Link>
           </div>
-          <div className="text-sm text-gold-400/80">© 2025 Serene Insights. All rights reserved.</div>
+          <div className="text-sm text-slate-400">© 2025 Serene Insights. All rights reserved.</div>
         </div>
       </footer>
     </div>
