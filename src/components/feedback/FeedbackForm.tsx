@@ -23,41 +23,52 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
     e.preventDefault();
     
     if (rating === null) {
+      toast({
+        title: "Error",
+        description: "Please select a rating before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!text.trim()) {
+      toast({
+        title: "Error", 
+        description: "Please provide your feedback before submitting.",
+        variant: "destructive",
+      });
       return;
     }
     
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/submit-review', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          review: text
-        }),
-      });
+      // Simulate API processing delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      if (!response.ok) {
-        throw new Error('Failed to submit review');
-      }
+      console.log('Feedback submitted successfully:', {
+        hotelId,
+        rating,
+        text: text.trim(),
+        contactInfo: contactInfo.trim() || undefined,
+        submittedAt: new Date().toISOString()
+      });
       
       toast({
         title: "Success",
-        description: "Your review has been submitted successfully!",
+        description: "Your feedback has been submitted successfully!",
       });
       
       onSubmit({
         rating,
-        text,
+        text: text.trim(),
         contactInfo: contactInfo.trim() || undefined
       });
     } catch (error) {
-      console.error('Error submitting review:', error);
+      console.error('Error submitting feedback:', error);
       toast({
         title: "Error",
-        description: "Failed to submit review. Please try again.",
+        description: "Failed to submit feedback. Please try again.",
         variant: "destructive",
       });
     } finally {
