@@ -64,11 +64,13 @@ export default function Dashboard() {
     positive: insights.sentiment_trends.Positive[index],
     neutral: insights.sentiment_trends.Neutral[index],
     negative: insights.sentiment_trends.Negative[index],
+    total: insights.sentiment_trends.Positive[index] + insights.sentiment_trends.Neutral[index] + insights.sentiment_trends.Negative[index],
   }));
 
   // Transform topics data
   const topicsData = insights.topics.map((topic, index) => ({
     topic: `Topic ${index + 1}`,
+    count: Math.round(topic.Weight),
     percentage: Math.round((topic.Weight / insights.topics.reduce((sum, t) => sum + t.Weight, 0)) * 100),
   }));
 

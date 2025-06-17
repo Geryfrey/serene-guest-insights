@@ -53,7 +53,8 @@ export default function AnomalyChart({ data }: AnomalyChartProps) {
                 dataKey="Z_Score"
                 stroke="#3B82F6"
                 strokeWidth={2}
-                dot={(props) => {
+                dot={false}
+                activeDot={(props) => {
                   const isAnomaly = Math.abs(props.payload?.Z_Score || 0) > 2;
                   return isAnomaly ? (
                     <circle 
@@ -63,9 +64,16 @@ export default function AnomalyChart({ data }: AnomalyChartProps) {
                       fill="#EF4444" 
                       stroke="#EF4444"
                     />
-                  ) : false;
+                  ) : (
+                    <circle 
+                      cx={props.cx} 
+                      cy={props.cy} 
+                      r={6} 
+                      fill="#3B82F6" 
+                      stroke="#3B82F6"
+                    />
+                  );
                 }}
-                activeDot={{ r: 6 }}
               />
             </LineChart>
           </ResponsiveContainer>
