@@ -1,7 +1,6 @@
 
 import { User, UserRole } from '@/types';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { mockUsers } from '@/services/mockData';
 
 interface AuthContextType {
   user: User | null;
@@ -33,21 +32,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // For demo purposes, we only check email and accept any password
-    const user = mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-    
-    if (user) {
-      setUser(user);
-      localStorage.setItem('serene_user', JSON.stringify(user));
+    try {
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to login');
+      }
+      
+      const userData = await response.json();
+      
+      if (userData.user) {
+        setUser(userData.user);
+        localStorage.setItem('serene_user', JSON.stringify(userData.user));
+        setIsLoading(false);
+        return true;
+      }
+      
       setIsLoading(false);
-      return true;
+      return false;
+    } catch (error) {
+      console.error('Login error:', error);
+      setIsLoading(false);
+      return false;
     }
-    
-    setIsLoading(false);
-    return false;
   };
 
   const logout = () => {
