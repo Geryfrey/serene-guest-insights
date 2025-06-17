@@ -43,16 +43,22 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
     setIsSubmitting(true);
     
     try {
-      // Simulate API processing delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log('Feedback submitted successfully:', {
-        hotelId,
-        rating,
-        text: text.trim(),
-        contactInfo: contactInfo.trim() || undefined,
-        submittedAt: new Date().toISOString()
+      const response = await fetch('http://localhost:5000/api/submit-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          review: text,
+          rating,
+          hotelId,
+          contactInfo: contactInfo.trim() || undefined
+        }),
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
       
       toast({
         title: "Success",
