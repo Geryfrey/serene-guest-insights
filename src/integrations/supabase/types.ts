@@ -9,7 +9,90 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      anomalies: {
+        Row: {
+          batch: string | null
+          id: number
+          z_score: number | null
+        }
+        Insert: {
+          batch?: string | null
+          id?: never
+          z_score?: number | null
+        }
+        Update: {
+          batch?: string | null
+          id?: never
+          z_score?: number | null
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          category: string | null
+          cleaned_review: string | null
+          created_at: string | null
+          id: number
+          original_review: string | null
+          review_length: number | null
+          sentiment: string | null
+        }
+        Insert: {
+          category?: string | null
+          cleaned_review?: string | null
+          created_at?: string | null
+          id?: never
+          original_review?: string | null
+          review_length?: number | null
+          sentiment?: string | null
+        }
+        Update: {
+          category?: string | null
+          cleaned_review?: string | null
+          created_at?: string | null
+          id?: never
+          original_review?: string | null
+          review_length?: number | null
+          sentiment?: string | null
+        }
+        Relationships: []
+      }
+      keywords: {
+        Row: {
+          frequency: number | null
+          id: number
+          term: string | null
+        }
+        Insert: {
+          frequency?: number | null
+          id?: never
+          term?: string | null
+        }
+        Update: {
+          frequency?: number | null
+          id?: never
+          term?: string | null
+        }
+        Relationships: []
+      }
+      topics: {
+        Row: {
+          id: number
+          name: string | null
+          score: number | null
+        }
+        Insert: {
+          id?: never
+          name?: string | null
+          score?: number | null
+        }
+        Update: {
+          id?: never
+          name?: string | null
+          score?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
