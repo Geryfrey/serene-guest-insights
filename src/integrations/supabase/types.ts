@@ -11,18 +11,21 @@ export type Database = {
     Tables: {
       anomalies: {
         Row: {
-          batch: string | null
+          batch: number | null
           id: number
+          negative_count: number | null
           z_score: number | null
         }
         Insert: {
-          batch?: string | null
+          batch?: number | null
           id?: never
+          negative_count?: number | null
           z_score?: number | null
         }
         Update: {
-          batch?: string | null
+          batch?: number | null
           id?: never
+          negative_count?: number | null
           z_score?: number | null
         }
         Relationships: []
@@ -59,37 +62,40 @@ export type Database = {
       }
       keywords: {
         Row: {
-          frequency: number | null
           id: number
-          term: string | null
+          keyword: string | null
+          score: number | null
         }
         Insert: {
-          frequency?: number | null
           id?: never
-          term?: string | null
+          keyword?: string | null
+          score?: number | null
         }
         Update: {
-          frequency?: number | null
           id?: never
-          term?: string | null
+          keyword?: string | null
+          score?: number | null
         }
         Relationships: []
       }
       topics: {
         Row: {
           id: number
-          name: string | null
-          score: number | null
+          terms: string | null
+          topic: string | null
+          weight: number | null
         }
         Insert: {
           id?: never
-          name?: string | null
-          score?: number | null
+          terms?: string | null
+          topic?: string | null
+          weight?: number | null
         }
         Update: {
           id?: never
-          name?: string | null
-          score?: number | null
+          terms?: string | null
+          topic?: string | null
+          weight?: number | null
         }
         Relationships: []
       }

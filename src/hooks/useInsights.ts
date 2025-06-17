@@ -90,78 +90,122 @@ const fetchInsights = async (): Promise<InsightsData> => {
 
   console.log('Raw data from Supabase:', { anomaliesData, feedbackData, topicsData, keywordsData });
 
-  // Transform anomalies data
+  // Transform anomalies data to match Python backend format
   const anomalies: Anomaly[] = (anomaliesData || []).map(item => ({
     Batch: parseInt(item.batch || '0'),
-    Negative_Count: 0, // This would need to be calculated from feedback data
+    Negative_Count: 0, // This would need to be calculated from feedback data if needed
     Z_Score: item.z_score || 0
   }));
 
-  // Transform sentiment data from feedback
+  // Calculate sentiment counts (matching Python's sentiment_counts logic)
+  const feedbackArray = feedbackData || [];
   const sentimentCounts = {
-    Negative: (feedbackData || []).filter(item => item.sentiment === 'negative').length,
-    Neutral: (feedbackData || []).filter(item => item.sentiment === 'neutral').length,
-    Positive: (feedbackData || []).filter(item => item.sentiment === 'positive').length
+    Positive: feedbackArray.filter(item => item.sentiment === 'Positive').length,
+    Neutral: feedbackArray.filter(item => item.sentiment === 'Neutral').length,
+    Negative: feedbackArray.filter(item => item.sentiment === 'Negative').length
   };
 
-  // Transform categories data from feedback
+  // Calculate categories (matching Python's categories logic)
   const categories = {
-    Cleanliness: (feedbackData || []).filter(item => item.category === 'Cleanliness').length,
-    Facilities: (feedbackData || []).filter(item => item.category === 'Facilities').length,
-    Service: (feedbackData || []).filter(item => item.category === 'Service').length
+    Cleanliness: feedbackArray.filter(item => item.category === 'Cleanliness').length,
+    Facilities: feedbackArray.filter(item => item.category === 'Facilities').length,
+    Service: feedbackArray.filter(item => item.category === 'Service').length
   };
 
-  // Transform keywords data
+  // Transform keywords data to match the expected format
   const keywords: Keyword[] = (keywordsData || []).map(item => ({
     Keyword: item.term || '',
-    Score: (item.frequency || 0) / 100 // Convert frequency to score
+    Score: (item.frequency || 0) / 100 // Convert frequency to score percentage
   }));
 
+  // Create keyword frequency data (top 10 keywords by frequency)
+  const sortedKeywords = (keywordsData || [])
+    .sort((a, b) => (b.frequency || 0) - (a.frequency || 0))
+    .slice(0, 10);
+  
   const keyword_frequency = {
-    labels: (keywordsData || []).slice(0, 10).map(item => item.term || ''),
-    counts: (keywordsData || []).slice(0, 10).map(item => item.frequency || 0)
+    labels: sortedKeywords.map(item => item.term || ''),
+    counts: sortedKeywords.map(item => item.frequency || 0)
   };
 
-  // Transform topics data
-  const topics: Topic[] = (topicsData || []).map((item, index) => ({
-    Topic: item.name || `Topic ${index + 1}`,
-    Terms: `topic, ${item.name || 'terms'}, analysis, insight, data`,
+  // Transform topics data to match expected format
+  const topics: Topic[] = (topicsData || []).map(item => ({
+    Topic: item.name || `Topic ${item.id}`,
+    Terms: `${item.name || 'topic'}, analysis, insight, data`, // Simplified terms
     Weight: item.score || 0
   }));
 
   // Generate review length data from feedback
-  const review_length_data = {
+  const reviewLengths = feedbackArray.map(item => item.review_length || 0).filter(length => length > 0);
+  let review_length_data = {
     bins: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-    counts: [1, 2, 3, 2, 1, 0, 1, 0, 0, 0] // Mock data for now
+    counts: [1, 2, 3, 2, 1, 0, 1, 0, 0, 0] // Default mock data
   };
 
-  // Generate sentiment by category data
+  // If we have actual review length data, calculate histogram
+  if (reviewLengths.length > 0) {
+    const minLength = Math.min(...reviewLengths);
+    const maxLength = Math.max(...reviewLengths);
+    const binCount = 10;
+    const binSize = Math.max(1, Math.ceil((maxLength - minLength) / binCount));
+    
+    const bins = [];
+    const counts = [];
+    
+    for (let i = 0; i < binCount; i++) {
+      const binStart = minLength + (i * binSize);
+      const binEnd = binStart + binSize;
+      bins.push(binStart);
+      
+      const count = reviewLengths.filter(length => length >= binStart && length < binEnd).length;
+      counts.push(count);
+    }
+    
+    review_length_data = { bins, counts };
+  }
+
+  // Calculate sentiment by category (matching Python pivot logic)
+  const categoryList = ['Cleanliness', 'Facilities', 'Service'];
   const sentiment_by_category = {
-    Negative: [
-      categories.Cleanliness > 0 ? Math.floor(categories.Cleanliness * 0.2) : 0,
-      categories.Facilities > 0 ? Math.floor(categories.Facilities * 0.3) : 0,
-      categories.Service > 0 ? Math.floor(categories.Service * 0.1) : 0
-    ],
-    Neutral: [
-      categories.Cleanliness > 0 ? Math.floor(categories.Cleanliness * 0.3) : 0,
-      categories.Facilities > 0 ? Math.floor(categories.Facilities * 0.2) : 0,
-      categories.Service > 0 ? Math.floor(categories.Service * 0.3) : 0
-    ],
-    Positive: [
-      categories.Cleanliness > 0 ? Math.floor(categories.Cleanliness * 0.5) : 1,
-      categories.Facilities > 0 ? Math.floor(categories.Facilities * 0.5) : 1,
-      categories.Service > 0 ? Math.floor(categories.Service * 0.6) : 2
-    ],
-    labels: ['Cleanliness', 'Facilities', 'Service']
+    labels: categoryList,
+    Positive: categoryList.map(cat => 
+      feedbackArray.filter(item => item.category === cat && item.sentiment === 'Positive').length
+    ),
+    Neutral: categoryList.map(cat => 
+      feedbackArray.filter(item => item.category === cat && item.sentiment === 'Neutral').length
+    ),
+    Negative: categoryList.map(cat => 
+      feedbackArray.filter(item => item.category === cat && item.sentiment === 'Negative').length
+    )
   };
 
-  // Generate sentiment trends over time
+  // Calculate sentiment trends (cumulative sentiment over time/index)
   const sentiment_trends = {
-    Negative: [0, 0, 0, 1, 0, 0, 0],
-    Neutral: [0, 1, 0, 0, 2, 0, 0],
-    Positive: [1, 0, 2, 0, 0, 3, 4],
-    labels: [0, 1, 2, 3, 4, 5, 6]
+    labels: feedbackArray.map((_, index) => index),
+    Positive: [],
+    Neutral: [],
+    Negative: []
   };
+
+  // Calculate cumulative counts for each sentiment
+  let posCount = 0, neuCount = 0, negCount = 0;
+  for (let i = 0; i < feedbackArray.length; i++) {
+    if (feedbackArray[i].sentiment === 'Positive') posCount++;
+    if (feedbackArray[i].sentiment === 'Neutral') neuCount++;
+    if (feedbackArray[i].sentiment === 'Negative') negCount++;
+    
+    sentiment_trends.Positive.push(posCount);
+    sentiment_trends.Neutral.push(neuCount);
+    sentiment_trends.Negative.push(negCount);
+  }
+
+  // If no feedback data, provide some default trend data
+  if (feedbackArray.length === 0) {
+    sentiment_trends.labels = [0, 1, 2, 3, 4, 5, 6];
+    sentiment_trends.Positive = [1, 1, 3, 3, 3, 6, 10];
+    sentiment_trends.Neutral = [0, 1, 1, 1, 3, 3, 3];
+    sentiment_trends.Negative = [0, 0, 0, 1, 1, 1, 1];
+  }
 
   return {
     anomalies,
