@@ -67,10 +67,10 @@ export default function Dashboard() {
     total: insights.sentiment_trends.Positive[index] + insights.sentiment_trends.Neutral[index] + insights.sentiment_trends.Negative[index],
   }));
 
-  // Transform topics data - Fix NaN% issue by ensuring proper calculations
+  // Transform topics data - Use actual topic names from database
   const totalTopicsWeight = insights.topics.reduce((sum, t) => sum + (t.Weight || 0), 0);
-  const topicsData = insights.topics.map((topic, index) => ({
-    topic: topic.Topic || `Topic ${index + 1}`,
+  const topicsData = insights.topics.map((topic) => ({
+    topic: topic.Topic || 'Unknown Topic', // Use the actual topic name from database
     count: Math.round(topic.Weight || 0),
     percentage: totalTopicsWeight > 0 ? Math.round(((topic.Weight || 0) / totalTopicsWeight) * 100) : 0,
   }));
