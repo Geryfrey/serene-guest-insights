@@ -130,7 +130,7 @@ const fetchInsights = async (): Promise<InsightsData> => {
   }));
 
   // Generate review length data from feedback
-  const reviewLengthData = {
+  const review_length_data = {
     bins: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     counts: [1, 2, 3, 2, 1, 0, 1, 0, 0, 0] // Mock data for now
   };
@@ -168,9 +168,9 @@ const fetchInsights = async (): Promise<InsightsData> => {
     categories,
     keyword_frequency,
     keywords,
-    review_length_data: reviewLengthData,
+    review_length_data,
     sentiment_by_category,
-    sentiment_counts,
+    sentiment_counts: sentimentCounts,
     sentiment_trends,
     topics
   };
