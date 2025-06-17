@@ -92,7 +92,7 @@ const fetchInsights = async (): Promise<InsightsData> => {
 
   // Transform anomalies data to match Python backend format
   const anomalies: Anomaly[] = (anomaliesData || []).map(item => ({
-    Batch: parseInt(item.batch || '0'),
+    Batch: parseInt(String(item.batch || '0')),
     Negative_Count: 0, // This would need to be calculated from feedback data if needed
     Z_Score: item.z_score || 0
   }));
@@ -112,27 +112,27 @@ const fetchInsights = async (): Promise<InsightsData> => {
     Service: feedbackArray.filter(item => item.category === 'Service').length
   };
 
-  // Transform keywords data to match the expected format
+  // Transform keywords data to match the expected format using correct property names
   const keywords: Keyword[] = (keywordsData || []).map(item => ({
-    Keyword: item.term || '',
-    Score: (item.frequency || 0) / 100 // Convert frequency to score percentage
+    Keyword: item.keyword || '',
+    Score: (item.score || 0) / 100 // Convert score to percentage if needed
   }));
 
-  // Create keyword frequency data (top 10 keywords by frequency)
+  // Create keyword frequency data (top 10 keywords by score)
   const sortedKeywords = (keywordsData || [])
-    .sort((a, b) => (b.frequency || 0) - (a.frequency || 0))
+    .sort((a, b) => (b.score || 0) - (a.score || 0))
     .slice(0, 10);
   
   const keyword_frequency = {
-    labels: sortedKeywords.map(item => item.term || ''),
-    counts: sortedKeywords.map(item => item.frequency || 0)
+    labels: sortedKeywords.map(item => item.keyword || ''),
+    counts: sortedKeywords.map(item => Math.round(item.score || 0))
   };
 
-  // Transform topics data to match expected format
+  // Transform topics data to match expected format using correct property names
   const topics: Topic[] = (topicsData || []).map(item => ({
-    Topic: item.name || `Topic ${item.id}`,
-    Terms: `${item.name || 'topic'}, analysis, insight, data`, // Simplified terms
-    Weight: item.score || 0
+    Topic: item.topic || `Topic ${item.id}`,
+    Terms: item.terms || `${item.topic || 'topic'}, analysis, insight, data`, // Use terms field
+    Weight: item.weight || 0
   }));
 
   // Generate review length data from feedback

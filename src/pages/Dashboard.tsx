@@ -42,7 +42,7 @@ export default function Dashboard() {
             <div className="text-center">
               <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-4" />
               <p className="text-muted-foreground">Failed to load insights data</p>
-              <p className="text-sm text-muted-foreground mt-2">Please ensure your API server is running on localhost:5000</p>
+              <p className="text-sm text-muted-foreground mt-2">Please ensure your data is available in Supabase</p>
             </div>
           </div>
         </PageLayout>
@@ -54,9 +54,9 @@ export default function Dashboard() {
 
   // Calculate sentiment metrics
   const totalReviews = insights.sentiment_counts.Positive + insights.sentiment_counts.Neutral + insights.sentiment_counts.Negative;
-  const positivePercentage = Math.round((insights.sentiment_counts.Positive / totalReviews) * 100);
-  const neutralPercentage = Math.round((insights.sentiment_counts.Neutral / totalReviews) * 100);
-  const negativePercentage = Math.round((insights.sentiment_counts.Negative / totalReviews) * 100);
+  const positivePercentage = totalReviews > 0 ? Math.round((insights.sentiment_counts.Positive / totalReviews) * 100) : 0;
+  const neutralPercentage = totalReviews > 0 ? Math.round((insights.sentiment_counts.Neutral / totalReviews) * 100) : 0;
+  const negativePercentage = totalReviews > 0 ? Math.round((insights.sentiment_counts.Negative / totalReviews) * 100) : 0;
 
   // Transform sentiment trends data for the chart
   const trendData = insights.sentiment_trends.labels.map((label, index) => ({
@@ -67,11 +67,12 @@ export default function Dashboard() {
     total: insights.sentiment_trends.Positive[index] + insights.sentiment_trends.Neutral[index] + insights.sentiment_trends.Negative[index],
   }));
 
-  // Transform topics data
+  // Transform topics data - Fix NaN% issue by ensuring proper calculations
+  const totalTopicsWeight = insights.topics.reduce((sum, t) => sum + (t.Weight || 0), 0);
   const topicsData = insights.topics.map((topic, index) => ({
-    topic: `Topic ${index + 1}`,
-    count: Math.round(topic.Weight),
-    percentage: Math.round((topic.Weight / insights.topics.reduce((sum, t) => sum + t.Weight, 0)) * 100),
+    topic: topic.Topic || `Topic ${index + 1}`,
+    count: Math.round(topic.Weight || 0),
+    percentage: totalTopicsWeight > 0 ? Math.round(((topic.Weight || 0) / totalTopicsWeight) * 100) : 0,
   }));
 
   // Get anomalies count
@@ -120,7 +121,7 @@ export default function Dashboard() {
             value={anomaliesCount}
             total={insights.anomalies.length}
             trend={anomaliesCount > 10 ? "up" : "stable"}
-            trendValue={`${Math.round((anomaliesCount / insights.anomalies.length) * 100)}%`}
+            trendValue={insights.anomalies.length > 0 ? `${Math.round((anomaliesCount / insights.anomalies.length) * 100)}%` : "0%"}
             variant={anomaliesCount > 10 ? "negative" : "neutral"}
             icon={<AlertCircle className="h-4 w-4" />}
           />
