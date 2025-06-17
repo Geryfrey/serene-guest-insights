@@ -2,28 +2,21 @@
 import FeedbackForm from "@/components/feedback/FeedbackForm";
 import ThankYouScreen from "@/components/feedback/ThankYouScreen";
 import PageLayout from "@/components/layout/PageLayout";
-import { analyzeSentiment } from "@/services/mockData";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 export default function GuestFeedback() {
   const { hotelId = "1" } = useParams<{ hotelId: string }>();
   const [submitted, setSubmitted] = useState(false);
-  const navigate = useNavigate();
   
   const handleSubmitFeedback = async (feedbackData: { 
     rating: number; 
     text: string; 
     contactInfo?: string;
   }) => {
-    // Perform sentiment analysis on the feedback
-    const sentiment = analyzeSentiment(feedbackData.text);
-    
-    // In a real app, we would send this to an API endpoint
-    console.log("Submitting feedback:", {
+    console.log("Feedback submitted:", {
       ...feedbackData,
       hotelId,
-      sentiment,
       createdAt: new Date().toISOString()
     });
     

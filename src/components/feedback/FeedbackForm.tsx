@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { analyzeSentiment } from "@/services/mockData";
+import { useToast } from "@/hooks/use-toast";
 
 interface FeedbackFormProps {
   hotelId: string;
@@ -17,6 +17,7 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
   const [text, setText] = useState("");
   const [contactInfo, setContactInfo] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,16 +28,41 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
     
     setIsSubmitting(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    onSubmit({
-      rating,
-      text,
-      contactInfo: contactInfo.trim() || undefined
-    });
-    
-    setIsSubmitting(false);
+    try {
+      const response = await fetch('http://localhost:5000/api/submit-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          review: text
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+      
+      toast({
+        title: "Success",
+        description: "Your review has been submitted successfully!",
+      });
+      
+      onSubmit({
+        rating,
+        text,
+        contactInfo: contactInfo.trim() || undefined
+      });
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit review. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
