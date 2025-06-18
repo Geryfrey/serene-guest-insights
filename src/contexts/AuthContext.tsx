@@ -157,7 +157,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           hotel_id: userData.role === 'hotel_manager' ? null : '550e8400-e29b-41d4-a716-446655440000',
           category: userData.role === 'service_manager' ? 'service' :
                    userData.role === 'food_manager' ? 'food_quality' :
-                   userData.role === 'facilities_manager' ? 'facilities' : 'general'
+                   userData.role === 'facilities_manager' ? 'facilities' : 'general',
+          password_hash: 'managed_by_supabase_auth' // Placeholder since auth is handled by Supabase
         });
 
       if (profileError) {
