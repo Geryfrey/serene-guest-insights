@@ -51,6 +51,37 @@ const ProtectedRoute = ({
   return <>{children}</>;
 };
 
+// Role-based dashboard redirect component
+const DashboardRedirect = () => {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  // Redirect based on user role
+  switch (user.role) {
+    case 'hotel_manager':
+      return <Navigate to="/dashboard/hotel" replace />;
+    case 'service_manager':
+      return <Navigate to="/dashboard/service" replace />;
+    case 'food_manager':
+      return <Navigate to="/dashboard/food" replace />;
+    case 'facilities_manager':
+      return <Navigate to="/dashboard/facilities" replace />;
+    default:
+      return <Navigate to="/dashboard/hotel" replace />;
+  }
+};
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -63,12 +94,35 @@ const AppRoutes = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/blog" element={<Blog />} />
 
-      {/* Protected routes */}
+      {/* Role-based dashboard routing */}
       <Route path="/dashboard" element={
         <ProtectedRoute>
+          <DashboardRedirect />
+        </ProtectedRoute>
+      } />
+      
+      {/* Role-specific dashboards */}
+      <Route path="/dashboard/hotel" element={
+        <ProtectedRoute allowedRoles={["hotel_manager"]}>
           <Dashboard />
         </ProtectedRoute>
       } />
+      <Route path="/dashboard/service" element={
+        <ProtectedRoute allowedRoles={["service_manager"]}>
+          <Dashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/dashboard/food" element={
+        <ProtectedRoute allowedRoles={["food_manager"]}>
+          <Dashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/dashboard/facilities" element={
+        <ProtectedRoute allowedRoles={["facilities_manager"]}>
+          <Dashboard />
+        </ProtectedRoute>
+      } />
+      
       <Route path="/reports" element={
         <ProtectedRoute>
           <Reports />

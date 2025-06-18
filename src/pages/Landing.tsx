@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
@@ -78,7 +79,6 @@ const navigationLinks = [
   { name: "How It Works", href: "#how-it-works" },
   { name: "Submit Feedback", href: "/feedback" },
   { name: "Contact", href: "/contact" },
-  { name: "Blog", href: "/blog" },
 ];
 
 export default function Landing() {
@@ -130,12 +130,21 @@ export default function Landing() {
                     {link.name}
                   </Link>
                 ))}
-                <Button
-                  asChild
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 shadow-lg hover:shadow-xl transition-all ml-4 hover:scale-105 duration-200"
-                >
-                  <Link to="/login">Manager Login</Link>
-                </Button>
+                <div className="flex items-center space-x-3 ml-4">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="border-blue-600 text-blue-600 hover:bg-blue-50 border hover:scale-105 transition-all duration-200"
+                  >
+                    <Link to="/login">Login</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 shadow-lg hover:shadow-xl transition-all hover:scale-105 duration-200"
+                  >
+                    <Link to="/signup">Sign Up</Link>
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -164,12 +173,19 @@ export default function Landing() {
                     {link.name}
                   </Link>
                 ))}
-                <div className="pt-2">
+                <div className="pt-2 space-y-2">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="border-blue-600 text-blue-600 hover:bg-blue-50 border w-full hover:scale-105 transition-all duration-200"
+                  >
+                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                  </Button>
                   <Button
                     asChild
                     className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 shadow-lg w-full hover:scale-105 transition-all duration-200"
                   >
-                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Manager Login</Link>
+                    <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
                   </Button>
                 </div>
               </div>
@@ -184,7 +200,7 @@ export default function Landing() {
         <div className="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight animate-slide-up">
-              Most Wanted Feedback Collection System for 5-Star Luxury Hotels in Rwanda
+              AI-Powered Feedback Analytics for Rwanda's Luxury Hotels
             </h1>
             <p className="text-xl md:text-2xl font-medium max-w-3xl mx-auto text-blue-100 animate-slide-up" style={{ animationDelay: '0.2s' }}>
               Transform guest feedback into <span className="text-amber-300 font-semibold">actionable insights</span>
@@ -200,14 +216,6 @@ export default function Landing() {
                   Submit Feedback
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-4 text-lg rounded-xl backdrop-blur-sm hover:scale-105 transition-all duration-200"
-              >
-                <Link to="/contact">Contact Us</Link>
               </Button>
             </div>
           </div>
@@ -298,9 +306,9 @@ export default function Landing() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-orange-600 font-semibold backdrop-blur-sm hover:scale-105 transition-all duration-200">
-              <Link to="/blog" className="flex items-center justify-center text-white hover:text-orange-600">
-                Read Blog
-                <BookOpen className="ml-2 h-5 w-5" />
+              <Link to="/login" className="flex items-center justify-center text-white hover:text-orange-600">
+                Login
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>
@@ -316,9 +324,9 @@ export default function Landing() {
           </div>
           <div className="flex gap-8">
             <Link to="/feedback" className="text-white hover:text-amber-400 transition-colors font-medium hover:scale-105 duration-200">Submit Feedback</Link>
-            <Link to="/login" className="text-white hover:text-blue-400 transition-colors font-medium hover:scale-105 duration-200">Manager Login</Link>
-            <Link to="/contact" className="text-white hover:text-indigo-400 transition-colors font-medium hover:scale-105 duration-200">Contact Us</Link>
-            <Link to="/blog" className="text-white hover:text-purple-400 transition-colors font-medium hover:scale-105 duration-200">Blog</Link>
+            <Link to="/login" className="text-white hover:text-blue-400 transition-colors font-medium hover:scale-105 duration-200">Login</Link>
+            <Link to="/signup" className="text-white hover:text-indigo-400 transition-colors font-medium hover:scale-105 duration-200">Sign Up</Link>
+            <Link to="/contact" className="text-white hover:text-purple-400 transition-colors font-medium hover:scale-105 duration-200">Contact</Link>
           </div>
           <div className="text-sm text-slate-400">© 2025 Serene Insights. All rights reserved.</div>
         </div>

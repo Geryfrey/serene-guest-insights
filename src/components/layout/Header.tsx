@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -27,6 +26,24 @@ export default function Header() {
     logout();
     navigate('/');
   };
+
+  // Get dashboard route based on user role
+  const getDashboardRoute = () => {
+    if (!user) return '/dashboard';
+    
+    switch (user.role) {
+      case 'hotel_manager':
+        return '/dashboard/hotel';
+      case 'service_manager':
+        return '/dashboard/service';
+      case 'food_manager':
+        return '/dashboard/food';
+      case 'facilities_manager':
+        return '/dashboard/facilities';
+      default:
+        return '/dashboard';
+    }
+  };
   
   if (!user) return null;
   
@@ -34,14 +51,14 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 h-16 border-b border-border bg-card z-50 px-4 animate-fade-in backdrop-blur-sm">
       <div className="h-full max-w-screen-2xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
-          <Link to="/dashboard" className="text-2xl font-serif font-semibold mr-8 hover:scale-105 transition-transform duration-200">
+          <Link to={getDashboardRoute()} className="text-2xl font-serif font-semibold mr-8 hover:scale-105 transition-transform duration-200">
             <span className="text-gradient">Serene</span>
             <span className="text-gradient-gold ml-1">Insights</span>
           </Link>
           
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              to="/dashboard"
+              to={getDashboardRoute()}
               className="text-sm font-medium transition-all duration-200 hover:text-primary hover:scale-105"
             >
               Dashboard
