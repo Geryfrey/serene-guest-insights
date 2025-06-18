@@ -5,22 +5,22 @@ import { Alert, Feedback, FeedbackTrend, Hotel, SentimentAnalysis, TopicDistribu
 export const mockUsers: User[] = [
   {
     id: "1",
-    name: "Admin User",
+    name: "Hotel Manager",
     email: "admin@sereneguest.com",
-    role: "admin"
+    role: "hotel_manager"
   },
   {
     id: "2",
     name: "John Manager",
     email: "john@luxuryhotel.com",
-    role: "manager",
+    role: "hotel_manager",
     hotelId: "1"
   },
   {
     id: "3",
     name: "Emma Manager",
     email: "emma@grandhotel.com",
-    role: "manager",
+    role: "hotel_manager",
     hotelId: "2"
   }
 ];

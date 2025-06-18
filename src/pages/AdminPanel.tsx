@@ -1,4 +1,3 @@
-
 import Header from "@/components/layout/Header";
 import PageLayout from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
@@ -51,7 +50,7 @@ export default function AdminPanel() {
   const [newUser, setNewUser] = useState<Partial<User>>({
     name: "",
     email: "",
-    role: "manager",
+    role: "hotel_manager",
     hotelId: undefined,
   });
   
@@ -80,7 +79,7 @@ export default function AdminPanel() {
       setNewUser({
         name: "",
         email: "",
-        role: "manager",
+        role: "hotel_manager",
         hotelId: undefined,
       });
     }
@@ -92,7 +91,7 @@ export default function AdminPanel() {
     setNewUser({
       name: "",
       email: "",
-      role: "manager",
+      role: "hotel_manager",
       hotelId: undefined,
     });
   };
@@ -141,7 +140,7 @@ export default function AdminPanel() {
   
   // Get available managers for hotel assignment
   const availableManagers = mockUsers.filter(user => 
-    user.role === "manager" && 
+    user.role === "hotel_manager" && 
     (user.hotelId === undefined || user.hotelId === newHotel.managerId || (selectedHotel && user.hotelId === selectedHotel.id))
   );
   
@@ -392,13 +391,15 @@ export default function AdminPanel() {
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="manager">Manager</SelectItem>
+                  <SelectItem value="hotel_manager">Hotel Manager</SelectItem>
+                  <SelectItem value="service_manager">Service Manager</SelectItem>
+                  <SelectItem value="food_manager">Food Manager</SelectItem>
+                  <SelectItem value="facilities_manager">Facilities Manager</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
-            {newUser.role === "manager" && (
+            {newUser.role === "hotel_manager" && (
               <div className="space-y-2">
                 <Label htmlFor="hotel">Assigned Hotel</Label>
                 <Select

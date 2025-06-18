@@ -1,4 +1,3 @@
-
 import FeedbackTable from "@/components/feedback/FeedbackTable";
 import Header from "@/components/layout/Header";
 import PageLayout from "@/components/layout/PageLayout";
@@ -16,7 +15,7 @@ export default function FeedbackPage() {
   const [exportFormat, setExportFormat] = useState<"pdf" | "csv" | null>(null);
   
   // Filter feedback for the current manager's hotel
-  const hotelFeedback = user?.role === "admin" 
+  const hotelFeedback = user?.role === "hotel_manager" 
     ? mockFeedback 
     : mockFeedback.filter(f => f.hotelId === user?.hotelId);
   
