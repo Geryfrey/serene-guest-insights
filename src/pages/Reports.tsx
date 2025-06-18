@@ -1,6 +1,6 @@
-
 import Header from "@/components/layout/Header";
 import PageLayout from "@/components/layout/PageLayout";
+import PDFGenerator from "@/components/reports/PDFGenerator";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -95,6 +95,15 @@ export default function Reports() {
     },
   ];
   
+  // Prepare data for PDF generation
+  const reportData = {
+    totalFeedback: 124,
+    positivePercentage: 72,
+    negativePercentage: 15,
+    averageRating: 4.2,
+    categories: categoryPerformance
+  };
+  
   const handleExport = (format: "pdf" | "csv") => {
     setExportFormat(format);
     
@@ -120,11 +129,12 @@ export default function Reports() {
           </div>
           
           <div className="flex items-center gap-2">
+            <PDFGenerator reportData={reportData} hotelName={hotelName} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Filter className="mr-2 h-4 w-4" />
-                  Export Report
+                  Export Data
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

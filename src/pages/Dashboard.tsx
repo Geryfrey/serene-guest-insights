@@ -1,4 +1,3 @@
-
 import Header from "@/components/layout/Header";
 import PageLayout from "@/components/layout/PageLayout";
 import SentimentCard from "@/components/dashboard/SentimentCard";
@@ -6,6 +5,7 @@ import TrendChart from "@/components/dashboard/TrendChart";
 import TopicsCard from "@/components/dashboard/TopicsCard";
 import AnomalyChart from "@/components/dashboard/AnomalyChart";
 import KeywordInsights from "@/components/dashboard/KeywordInsights";
+import RecentReviews from "@/components/dashboard/RecentReviews";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useInsights } from "@/hooks/useInsights";
@@ -148,20 +148,25 @@ export default function Dashboard() {
         </div>
         
         {/* Charts row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200/60 overflow-hidden hover:shadow-xl transition-all duration-300">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg border border-slate-200/60 overflow-hidden hover:shadow-xl transition-all duration-300">
             <TrendChart title="Sentiment Trends Over Time" data={trendData} />
           </div>
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200/60 overflow-hidden hover:shadow-xl transition-all duration-300">
-            <AnomalyChart data={insights.anomalies} />
-          </div>
+          <RecentReviews hotelId={user?.hotelId} />
         </div>
 
         {/* Second charts row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200/60 overflow-hidden hover:shadow-xl transition-all duration-300">
+            <AnomalyChart data={insights.anomalies} />
+          </div>
+          <div className="bg-white rounded-2xl shadow-lg border border-slate-200/60 overflow-hidden hover:shadow-xl transition-all duration-300">
             <KeywordInsights data={insights.keyword_frequency} />
           </div>
+        </div>
+
+        {/* Third charts row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200/60 overflow-hidden hover:shadow-xl transition-all duration-300">
             <TopicsCard title="Topic Distribution" topics={topicsData} />
           </div>

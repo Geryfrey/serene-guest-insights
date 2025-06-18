@@ -31,26 +31,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     console.log('AuthProvider - Initializing with Supabase');
     
+    // Listen for auth changes first
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('AuthProvider - Auth state changed:', event, session);
+      
+      if (event === 'SIGNED_OUT' || !session?.user) {
+        console.log('AuthProvider - User signed out or no session');
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+      
+      if (session?.user) {
+        await fetchUserProfile(session.user);
+      }
+    });
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('AuthProvider - Initial session:', session);
       if (session?.user) {
         fetchUserProfile(session.user);
       } else {
-        setIsLoading(false);
-      }
-    });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('AuthProvider - Auth state changed:', event, session);
-      
-      if (session?.user) {
-        await fetchUserProfile(session.user);
-      } else {
-        setUser(null);
         setIsLoading(false);
       }
     });
@@ -126,7 +130,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     
     try {
-      // First, sign up the user with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: userData.email,
         password: userData.password,
@@ -146,7 +149,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: false, error: 'Failed to create user account' };
       }
 
-      // Then, create the user profile in our users table
       const { error: profileError } = await supabase
         .from('users')
         .insert({
@@ -158,7 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           category: userData.role === 'service_manager' ? 'service' :
                    userData.role === 'food_manager' ? 'food_quality' :
                    userData.role === 'facilities_manager' ? 'facilities' : 'general',
-          password_hash: 'managed_by_supabase_auth' // Placeholder since auth is handled by Supabase
+          password_hash: 'managed_by_supabase_auth'
         });
 
       if (profileError) {
@@ -179,8 +181,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     console.log('AuthProvider - Logout');
+    setIsLoading(true);
     await supabase.auth.signOut();
     setUser(null);
+    setIsLoading(false);
   };
 
   const value = {
