@@ -21,11 +21,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const savedUser = localStorage.getItem('serene_user');
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
       } catch (e) {
         console.error('Failed to parse user from localStorage');
+        localStorage.removeItem('serene_user');
       }
     }
+    // Always set loading to false after checking localStorage
     setIsLoading(false);
   }, []);
 
@@ -45,7 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       
       if (!response.ok) {
-        throw new Error('Failed to login');
+        setIsLoading(false);
+        return false;
       }
       
       const userData = await response.json();

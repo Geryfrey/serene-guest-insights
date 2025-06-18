@@ -82,8 +82,17 @@ const navigationLinks = [
 ];
 
 export default function Landing() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isLoading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Show loading state while auth is being determined
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   // If logged in, redirect to dashboard
   if (isAuthenticated && user) {

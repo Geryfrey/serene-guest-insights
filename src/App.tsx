@@ -30,7 +30,11 @@ const ProtectedRoute = ({
   
   // Show loading state while auth is being determined
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
   }
   
   if (!isAuthenticated) {
