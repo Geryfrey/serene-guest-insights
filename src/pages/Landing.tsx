@@ -139,7 +139,7 @@ export default function Landing() {
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="text-slate-700 hover:text-blue-600 px-3 py-2 rounded-lg text-sm font-medium transition-all hover:bg-blue-50 hover:scale-105 duration-200"
+                    className="text-slate-800 hover:text-blue-600 px-3 py-2 rounded-lg text-sm font-medium transition-all hover:bg-blue-50 hover:scale-105 duration-200"
                   >
                     {link.name}
                   </Link>
@@ -157,7 +157,7 @@ export default function Landing() {
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-slate-700 hover:text-blue-600 p-2 rounded-lg hover:bg-blue-50 transition-all duration-200 hover:scale-105"
+                className="text-slate-800 hover:text-blue-600 p-2 rounded-lg hover:bg-blue-50 transition-all duration-200 hover:scale-105"
               >
                 {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -172,7 +172,7 @@ export default function Landing() {
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="text-slate-700 hover:text-blue-600 block px-3 py-2 rounded-lg text-base font-medium transition-all hover:bg-blue-50 hover:scale-105 duration-200"
+                    className="text-slate-800 hover:text-blue-600 block px-3 py-2 rounded-lg text-base font-medium transition-all hover:bg-blue-50 hover:scale-105 duration-200"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.name}
