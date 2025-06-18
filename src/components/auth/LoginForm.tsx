@@ -40,14 +40,16 @@ export default function LoginForm() {
       console.error('Login error:', err);
       
       // Handle specific Supabase auth errors
-      if (err?.code === 'email_not_confirmed') {
-        setError("Please check your email and click the confirmation link before signing in.");
-      } else if (err?.message?.includes('Email not confirmed')) {
+      if (err?.message?.includes('Email not confirmed')) {
         setError("Please check your email and click the confirmation link before signing in.");
       } else if (err?.message?.includes('Invalid login credentials')) {
         setError("Invalid email or password. Please check your credentials.");
+      } else if (err?.message?.includes('Email link is invalid or has expired')) {
+        setError("The email confirmation link has expired. Please sign up again.");
+      } else if (err?.message?.includes('Signup requires a valid password')) {
+        setError("Please enter a valid password.");
       } else {
-        setError("An error occurred during login. Please try again.");
+        setError(err?.message || "An error occurred during login. Please try again.");
       }
     } finally {
       setIsLoading(false);

@@ -107,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         console.error('AuthProvider - Login error:', error);
         setIsLoading(false);
-        return false;
+        throw error; // Throw the error so it can be caught by the login form
       }
 
       if (data.user) {
@@ -121,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('AuthProvider - Login exception:', error);
       setIsLoading(false);
-      return false;
+      throw error; // Re-throw the error
     }
   };
 
@@ -134,7 +134,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: userData.email,
         password: userData.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: `${window.location.origin}/login`,
         }
       });
 
@@ -149,24 +149,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: false, error: 'Failed to create user account' };
       }
 
-      const { error: profileError } = await supabase
+      // Check if user profile already exists
+      const { data: existingProfile } = await supabase
         .from('users')
-        .insert({
-          id: authData.user.id,
-          email: userData.email,
-          name: userData.name,
-          role: userData.role as UserRole,
-          hotel_id: userData.role === 'hotel_manager' ? null : '550e8400-e29b-41d4-a716-446655440000',
-          category: userData.role === 'service_manager' ? 'service' :
-                   userData.role === 'food_manager' ? 'food_quality' :
-                   userData.role === 'facilities_manager' ? 'facilities' : 'general',
-          password_hash: 'managed_by_supabase_auth'
-        });
+        .select('id')
+        .eq('id', authData.user.id)
+        .single();
 
-      if (profileError) {
-        console.error('AuthProvider - Profile creation error:', profileError);
-        setIsLoading(false);
-        return { success: false, error: 'Failed to create user profile' };
+      if (!existingProfile) {
+        // Only create profile if it doesn't exist
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert({
+            id: authData.user.id,
+            email: userData.email,
+            name: userData.name,
+            role: userData.role as UserRole,
+            hotel_id: userData.role === 'hotel_manager' ? null : '550e8400-e29b-41d4-a716-446655440000',
+            category: userData.role === 'service_manager' ? 'service' :
+                     userData.role === 'food_manager' ? 'food_quality' :
+                     userData.role === 'facilities_manager' ? 'facilities' : 'general',
+            password_hash: 'managed_by_supabase_auth'
+          });
+
+        if (profileError) {
+          console.error('AuthProvider - Profile creation error:', profileError);
+          setIsLoading(false);
+          return { success: false, error: 'Failed to create user profile' };
+        }
       }
 
       console.log('AuthProvider - Signup successful');
@@ -182,9 +192,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     console.log('AuthProvider - Logout');
     setIsLoading(true);
-    await supabase.auth.signOut();
-    setUser(null);
-    setIsLoading(false);
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+    } catch (error) {
+      console.error('AuthProvider - Logout error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const value = {

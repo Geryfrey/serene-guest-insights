@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -75,14 +75,18 @@ export default function SignupForm() {
       if (result.success) {
         toast({
           title: "Account created successfully!",
-          description: "You can now sign in with your credentials.",
+          description: "Please check your email to confirm your account before signing in.",
         });
         navigate("/login");
       } else {
-        setError(result.error || "Failed to create account");
+        if (result.error?.includes('User already registered')) {
+          setError("An account with this email already exists. Please try logging in instead.");
+        } else {
+          setError(result.error || "Failed to create account");
+        }
       }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
+    } catch (err: any) {
+      setError(err?.message || "An error occurred. Please try again.");
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -198,7 +202,7 @@ export default function SignupForm() {
             />
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col space-y-4">
           <Button
             type="submit"
             className="w-full bg-gradient-to-r from-navy-700 to-navy-600 hover:from-navy-800 hover:to-navy-700"
@@ -206,6 +210,13 @@ export default function SignupForm() {
           >
             {isLoading ? "Creating Account..." : "Create Account"}
           </Button>
+          
+          <div className="text-center text-sm">
+            <span className="text-muted-foreground">Already have an account? </span>
+            <Link to="/login" className="text-primary underline-offset-4 hover:underline">
+              Sign in here
+            </Link>
+          </div>
         </CardFooter>
       </form>
     </Card>
