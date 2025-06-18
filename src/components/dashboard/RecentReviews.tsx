@@ -66,7 +66,7 @@ export default function RecentReviews({ hotelId }: RecentReviewsProps) {
               </p>
               
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{feedback.guestName || 'Anonymous'}</span>
+                <span>Anonymous</span>
                 <span>{new Date(feedback.createdAt).toLocaleDateString()}</span>
               </div>
               
