@@ -52,10 +52,6 @@ const ProtectedRoute = ({
 };
 
 const AppRoutes = () => {
-  const { isAuthenticated, isLoading } = useAuth();
-  
-  console.log('AppRoutes - isLoading:', isLoading, 'isAuthenticated:', isAuthenticated);
-  
   return (
     <Routes>
       {/* Public routes */}
