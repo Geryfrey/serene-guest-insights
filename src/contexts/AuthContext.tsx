@@ -17,46 +17,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session in localStorage
-    const savedUser = localStorage.getItem('serene_user');
-    if (savedUser) {
+    // Simulate checking for existing session
+    const checkSession = async () => {
       try {
-        const parsedUser = JSON.parse(savedUser);
-        setUser(parsedUser);
+        const savedUser = localStorage.getItem('serene_user');
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+        }
       } catch (e) {
         console.error('Failed to parse user from localStorage');
         localStorage.removeItem('serene_user');
+      } finally {
+        setIsLoading(false);
       }
-    }
-    // Always set loading to false after checking localStorage
-    setIsLoading(false);
+    };
+
+    checkSession();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password
-        }),
-      });
+      // Mock login for now - you can connect to your backend later
+      const mockUsers = [
+        { id: '1', email: 'admin@luxuryhotel.com', name: 'Hotel Manager', role: 'hotel_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
+        { id: '2', email: 'service@luxuryhotel.com', name: 'Service Manager', role: 'service_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
+        { id: '3', email: 'food@luxuryhotel.com', name: 'Food Manager', role: 'food_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
+        { id: '4', email: 'facilities@luxuryhotel.com', name: 'Facilities Manager', role: 'facilities_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' }
+      ];
+
+      const foundUser = mockUsers.find(u => u.email === email);
       
-      if (!response.ok) {
-        setIsLoading(false);
-        return false;
-      }
-      
-      const userData = await response.json();
-      
-      if (userData.user) {
-        setUser(userData.user);
-        localStorage.setItem('serene_user', JSON.stringify(userData.user));
+      if (foundUser && password === 'password123') {
+        setUser(foundUser);
+        localStorage.setItem('serene_user', JSON.stringify(foundUser));
         setIsLoading(false);
         return true;
       }
