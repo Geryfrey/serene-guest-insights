@@ -292,13 +292,13 @@ export default function Landing() {
           </div>
           <div className="md:w-1/3 flex flex-col gap-4 w-full md:w-auto animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <Button asChild size="lg" className="bg-white text-orange-600 hover:bg-orange-50 font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105 duration-200">
-              <Link to="/signup" className="flex items-center justify-center">
+              <Link to="/signup" className="flex items-center justify-center text-orange-600">
                 Sign Up
                 <Mail className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-orange-600 font-semibold backdrop-blur-sm hover:scale-105 transition-all duration-200">
-              <Link to="/blog" className="flex items-center justify-center">
+              <Link to="/blog" className="flex items-center justify-center text-white hover:text-orange-600">
                 Read Blog
                 <BookOpen className="ml-2 h-5 w-5" />
               </Link>

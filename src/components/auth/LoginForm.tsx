@@ -34,11 +34,21 @@ export default function LoginForm() {
       if (success) {
         navigate("/dashboard");
       } else {
-        setError("Invalid email or password");
+        setError("Login failed. Please check your credentials.");
       }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-      console.error(err);
+    } catch (err: any) {
+      console.error('Login error:', err);
+      
+      // Handle specific Supabase auth errors
+      if (err?.code === 'email_not_confirmed') {
+        setError("Please check your email and click the confirmation link before signing in.");
+      } else if (err?.message?.includes('Email not confirmed')) {
+        setError("Please check your email and click the confirmation link before signing in.");
+      } else if (err?.message?.includes('Invalid login credentials')) {
+        setError("Invalid email or password. Please check your credentials.");
+      } else {
+        setError("An error occurred during login. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -105,6 +115,10 @@ export default function LoginForm() {
             <Link to="/signup" className="text-primary underline-offset-4 hover:underline">
               Sign up here
             </Link>
+          </div>
+          
+          <div className="text-center text-xs text-muted-foreground">
+            <p>Note: You need to confirm your email address before signing in.</p>
           </div>
         </CardFooter>
       </form>
