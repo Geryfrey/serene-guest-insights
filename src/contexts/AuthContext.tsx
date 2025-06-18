@@ -17,30 +17,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate checking for existing session
-    const checkSession = async () => {
+    console.log('AuthProvider - Initializing');
+    
+    const initializeAuth = () => {
       try {
         const savedUser = localStorage.getItem('serene_user');
+        console.log('AuthProvider - Saved user:', savedUser);
+        
         if (savedUser) {
           const parsedUser = JSON.parse(savedUser);
+          console.log('AuthProvider - Parsed user:', parsedUser);
           setUser(parsedUser);
         }
       } catch (e) {
-        console.error('Failed to parse user from localStorage');
+        console.error('Failed to parse user from localStorage:', e);
         localStorage.removeItem('serene_user');
       } finally {
+        console.log('AuthProvider - Setting loading to false');
         setIsLoading(false);
       }
     };
 
-    checkSession();
+    // Add a small delay to prevent render loops
+    const timer = setTimeout(initializeAuth, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    console.log('AuthProvider - Login attempt for:', email);
     setIsLoading(true);
     
     try {
-      // Mock login for now - you can connect to your backend later
+      // Mock users for testing
       const mockUsers = [
         { id: '1', email: 'admin@luxuryhotel.com', name: 'Hotel Manager', role: 'hotel_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
         { id: '2', email: 'service@luxuryhotel.com', name: 'Service Manager', role: 'service_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
@@ -51,12 +59,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const foundUser = mockUsers.find(u => u.email === email);
       
       if (foundUser && password === 'password123') {
+        console.log('AuthProvider - Login successful for:', foundUser);
         setUser(foundUser);
         localStorage.setItem('serene_user', JSON.stringify(foundUser));
         setIsLoading(false);
         return true;
       }
       
+      console.log('AuthProvider - Login failed');
       setIsLoading(false);
       return false;
     } catch (error) {
@@ -67,6 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    console.log('AuthProvider - Logout');
     setUser(null);
     localStorage.removeItem('serene_user');
   };
@@ -78,6 +89,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
     isLoading
   };
+
+  console.log('AuthProvider - Current state:', value);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

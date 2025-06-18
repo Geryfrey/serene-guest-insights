@@ -28,6 +28,8 @@ const ProtectedRoute = ({
 }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
   
+  console.log('ProtectedRoute - isLoading:', isLoading, 'isAuthenticated:', isAuthenticated, 'user:', user);
+  
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
@@ -36,15 +38,56 @@ const ProtectedRoute = ({
     );
   }
   
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
+    console.log('Redirecting to login - not authenticated');
     return <Navigate to="/login" replace />;
   }
   
-  if (user && !allowedRoles.includes(user.role)) {
+  if (!allowedRoles.includes(user.role)) {
+    console.log('Redirecting to home - insufficient role');
     return <Navigate to="/" replace />;
   }
   
   return <>{children}</>;
+};
+
+const AppRoutes = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  
+  console.log('AppRoutes - isLoading:', isLoading, 'isAuthenticated:', isAuthenticated);
+  
+  return (
+    <Routes>
+      {/* Public routes */}
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/feedback" element={<GuestFeedback />} />
+      <Route path="/feedback/:hotelId" element={<GuestFeedback />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/blog" element={<Blog />} />
+
+      {/* Protected routes */}
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/reports" element={
+        <ProtectedRoute>
+          <Reports />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin" element={
+        <ProtectedRoute allowedRoles={["hotel_manager"]}>
+          <AdminPanel />
+        </ProtectedRoute>
+      } />
+      
+      {/* Catch-all route */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
 };
 
 const App = () => (
@@ -54,36 +97,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/feedback" element={<GuestFeedback />} />
-            <Route path="/feedback/:hotelId" element={<GuestFeedback />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/blog" element={<Blog />} />
-
-            {/* Protected routes */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/reports" element={
-              <ProtectedRoute>
-                <Reports />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin" element={
-              <ProtectedRoute allowedRoles={["hotel_manager"]}>
-                <AdminPanel />
-              </ProtectedRoute>
-            } />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AppRoutes />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
