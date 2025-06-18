@@ -5,9 +5,19 @@ import { createContext, useContext, useEffect, useState } from 'react';
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
+  signup: (userData: SignupData) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
+}
+
+interface SignupData {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  hotelName?: string;
+  hotelLocation?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,12 +57,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     
     try {
-      // Mock users with correct roles that match ProtectedRoute expectations
+      // Mock users with the correct emails that match the LoginForm
       const mockUsers = [
         { id: '1', email: 'admin@luxuryhotel.com', name: 'Hotel Manager', role: 'hotel_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
         { id: '2', email: 'service@luxuryhotel.com', name: 'Service Manager', role: 'service_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
         { id: '3', email: 'food@luxuryhotel.com', name: 'Food Manager', role: 'food_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
-        { id: '4', email: 'facilities@luxuryhotel.com', name: 'Facilities Manager', role: 'facilities_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' }
+        { id: '4', email: 'facilities@luxuryhotel.com', name: 'Facilities Manager', role: 'facilities_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
+        // Add some commonly used test emails
+        { id: '5', email: 'test@test.com', name: 'Test User', role: 'hotel_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
+        { id: '6', email: 'demo@demo.com', name: 'Demo User', role: 'hotel_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' }
       ];
 
       const foundUser = mockUsers.find(u => u.email === email);
@@ -75,6 +88,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signup = async (userData: SignupData): Promise<{ success: boolean; error?: string }> => {
+    console.log('AuthProvider - Signup attempt for:', userData.email);
+    setIsLoading(true);
+    
+    try {
+      // Check if user already exists
+      const existingUsers = JSON.parse(localStorage.getItem('serene_users') || '[]');
+      const userExists = existingUsers.some((u: any) => u.email === userData.email);
+      
+      if (userExists) {
+        setIsLoading(false);
+        return { success: false, error: 'User with this email already exists' };
+      }
+      
+      // Create new user
+      const newUser: User = {
+        id: Date.now().toString(),
+        email: userData.email,
+        name: userData.name,
+        role: userData.role as UserRole,
+        hotelId: userData.role === 'hotel_manager' ? Date.now().toString() : '550e8400-e29b-41d4-a716-446655440000'
+      };
+      
+      // Save to localStorage (simulating database)
+      existingUsers.push(newUser);
+      localStorage.setItem('serene_users', JSON.stringify(existingUsers));
+      
+      console.log('AuthProvider - Signup successful for:', newUser);
+      setIsLoading(false);
+      return { success: true };
+    } catch (error) {
+      console.error('Signup error:', error);
+      setIsLoading(false);
+      return { success: false, error: 'An error occurred during signup' };
+    }
+  };
+
   const logout = () => {
     console.log('AuthProvider - Logout');
     setUser(null);
@@ -84,6 +134,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     user,
     login,
+    signup,
     logout,
     isAuthenticated: !!user,
     isLoading

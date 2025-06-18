@@ -20,6 +20,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -36,6 +37,7 @@ export default function SignupForm() {
   
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signup } = useAuth();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,32 +56,30 @@ export default function SignupForm() {
       return;
     }
     
+    if (!formData.role) {
+      setError("Please select a role");
+      setIsLoading(false);
+      return;
+    }
+    
     try {
-      const response = await fetch('http://localhost:5000/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: formData.role,
-          hotelName: formData.hotelName,
-          hotelLocation: formData.hotelLocation,
-        }),
+      const result = await signup({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+        hotelName: formData.hotelName,
+        hotelLocation: formData.hotelLocation,
       });
       
-      const data = await response.json();
-      
-      if (response.ok) {
+      if (result.success) {
         toast({
           title: "Account created successfully!",
           description: "You can now sign in with your credentials.",
         });
         navigate("/login");
       } else {
-        setError(data.message || "Failed to create account");
+        setError(result.error || "Failed to create account");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
