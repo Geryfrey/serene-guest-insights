@@ -33,7 +33,7 @@ export default function SignupForm() {
     hotelLocation: "",
   });
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -42,23 +42,23 @@ export default function SignupForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true);
+    setIsSubmitting(true);
     
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      setIsLoading(false);
+      setIsSubmitting(false);
       return;
     }
     
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters long");
-      setIsLoading(false);
+      setIsSubmitting(false);
       return;
     }
     
     if (!formData.role) {
       setError("Please select a role");
-      setIsLoading(false);
+      setIsSubmitting(false);
       return;
     }
     
@@ -89,7 +89,7 @@ export default function SignupForm() {
       setError(err?.message || "An error occurred. Please try again.");
       console.error(err);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
   
@@ -122,6 +122,7 @@ export default function SignupForm() {
               onChange={(e) => handleInputChange("name", e.target.value)}
               placeholder="John Doe"
               required
+              disabled={isSubmitting}
             />
           </div>
           
@@ -134,12 +135,17 @@ export default function SignupForm() {
               onChange={(e) => handleInputChange("email", e.target.value)}
               placeholder="you@example.com"
               required
+              disabled={isSubmitting}
             />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Select value={formData.role} onValueChange={(value) => handleInputChange("role", value)}>
+            <Select 
+              value={formData.role} 
+              onValueChange={(value) => handleInputChange("role", value)}
+              disabled={isSubmitting}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
@@ -163,6 +169,7 @@ export default function SignupForm() {
                   onChange={(e) => handleInputChange("hotelName", e.target.value)}
                   placeholder="Grand Hotel"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
@@ -175,6 +182,7 @@ export default function SignupForm() {
                   onChange={(e) => handleInputChange("hotelLocation", e.target.value)}
                   placeholder="New York City"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
             </>
@@ -188,6 +196,7 @@ export default function SignupForm() {
               value={formData.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
           
@@ -199,6 +208,7 @@ export default function SignupForm() {
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
         </CardContent>
@@ -206,9 +216,9 @@ export default function SignupForm() {
           <Button
             type="submit"
             className="w-full bg-gradient-to-r from-navy-700 to-navy-600 hover:from-navy-800 hover:to-navy-700"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            {isLoading ? "Creating Account..." : "Create Account"}
+            {isSubmitting ? "Creating Account..." : "Create Account"}
           </Button>
           
           <div className="text-center text-sm">

@@ -18,7 +18,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true);
+    setIsSubmitting(true);
     
     try {
       const success = await login(email, password);
@@ -39,20 +39,17 @@ export default function LoginForm() {
     } catch (err: any) {
       console.error('Login error:', err);
       
-      // Handle specific Supabase auth errors
       if (err?.message?.includes('Email not confirmed')) {
         setError("Please check your email and click the confirmation link before signing in.");
       } else if (err?.message?.includes('Invalid login credentials')) {
         setError("Invalid email or password. Please check your credentials.");
       } else if (err?.message?.includes('Email link is invalid or has expired')) {
         setError("The email confirmation link has expired. Please sign up again.");
-      } else if (err?.message?.includes('Signup requires a valid password')) {
-        setError("Please enter a valid password.");
       } else {
         setError(err?.message || "An error occurred during login. Please try again.");
       }
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
   
@@ -81,6 +78,7 @@ export default function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
+              disabled={isSubmitting}
             />
           </div>
           
@@ -100,6 +98,7 @@ export default function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
         </CardContent>
@@ -107,9 +106,9 @@ export default function LoginForm() {
           <Button
             type="submit"
             className="w-full bg-gradient-to-r from-navy-700 to-navy-600 hover:from-navy-800 hover:to-navy-700"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isSubmitting ? "Signing in..." : "Sign In"}
           </Button>
           
           <div className="text-center text-sm">

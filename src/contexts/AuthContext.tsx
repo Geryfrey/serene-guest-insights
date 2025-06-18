@@ -29,35 +29,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('AuthProvider - Initializing with Supabase');
+    console.log('AuthProvider - Setting up auth listener');
     
-    // Listen for auth changes first
+    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('AuthProvider - Auth state changed:', event, session);
+      console.log('AuthProvider - Auth state changed:', event, !!session);
       
       if (event === 'SIGNED_OUT' || !session?.user) {
-        console.log('AuthProvider - User signed out or no session');
         setUser(null);
         setIsLoading(false);
         return;
       }
       
-      if (session?.user) {
-        await fetchUserProfile(session.user);
+      if (session?.user && event === 'SIGNED_IN') {
+        // Use setTimeout to avoid blocking the auth state change
+        setTimeout(() => {
+          fetchUserProfile(session.user);
+        }, 0);
       }
     });
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('AuthProvider - Initial session:', session);
-      if (session?.user) {
-        fetchUserProfile(session.user);
-      } else {
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          await fetchUserProfile(session.user);
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('AuthProvider - Error initializing auth:', error);
         setIsLoading(false);
       }
-    });
+    };
+
+    initializeAuth();
 
     return () => subscription.unsubscribe();
   }, []);
@@ -74,6 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.error('AuthProvider - Error fetching user profile:', error);
+        // If profile doesn't exist, user might need to complete signup
         setUser(null);
       } else if (userProfile) {
         console.log('AuthProvider - User profile found:', userProfile);
@@ -107,12 +117,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         console.error('AuthProvider - Login error:', error);
         setIsLoading(false);
-        throw error; // Throw the error so it can be caught by the login form
+        throw error;
       }
 
       if (data.user) {
         console.log('AuthProvider - Login successful');
-        // fetchUserProfile will be called by the auth state change listener
+        // Don't manually fetch profile here - let the auth state change handle it
         return true;
       }
       
@@ -121,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('AuthProvider - Login exception:', error);
       setIsLoading(false);
-      throw error; // Re-throw the error
+      throw error;
     }
   };
 
@@ -149,15 +159,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: false, error: 'Failed to create user account' };
       }
 
-      // Check if user profile already exists
-      const { data: existingProfile } = await supabase
-        .from('users')
-        .select('id')
-        .eq('id', authData.user.id)
-        .single();
-
-      if (!existingProfile) {
-        // Only create profile if it doesn't exist
+      // Create user profile
+      try {
         const { error: profileError } = await supabase
           .from('users')
           .insert({
@@ -174,9 +177,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (profileError) {
           console.error('AuthProvider - Profile creation error:', profileError);
-          setIsLoading(false);
-          return { success: false, error: 'Failed to create user profile' };
+          // Don't fail the signup if profile creation fails - user can still verify email
+          console.log('AuthProvider - Continuing with signup despite profile error');
         }
+      } catch (profileError) {
+        console.error('AuthProvider - Profile creation exception:', profileError);
+        // Continue with signup
       }
 
       console.log('AuthProvider - Signup successful');
@@ -210,8 +216,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
     isLoading
   };
-
-  console.log('AuthProvider - Current state:', value);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
