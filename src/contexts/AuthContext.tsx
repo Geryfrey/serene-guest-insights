@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
       
-      if (session?.user && event === 'SIGNED_IN') {
+      if (session?.user && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
         // Use setTimeout to avoid blocking the auth state change
         setTimeout(() => {
           fetchUserProfile(session.user);
@@ -83,8 +83,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.error('AuthProvider - Error fetching user profile:', error);
-        // If profile doesn't exist, user might need to complete signup
-        setUser(null);
+        
+        // If profile doesn't exist, create a default one
+        if (error.code === 'PGRST116') {
+          console.log('AuthProvider - Creating default user profile');
+          const { data: newProfile, error: createError } = await supabase
+            .from('users')
+            .insert({
+              id: supabaseUser.id,
+              email: supabaseUser.email || '',
+              name: supabaseUser.user_metadata?.name || supabaseUser.email?.split('@')[0] || 'User',
+              role: 'hotel_manager' as UserRole,
+              hotel_id: '550e8400-e29b-41d4-a716-446655440000',
+              category: 'general',
+              password_hash: 'managed_by_supabase_auth'
+            })
+            .select()
+            .single();
+
+          if (createError) {
+            console.error('AuthProvider - Error creating user profile:', createError);
+            setUser(null);
+          } else if (newProfile) {
+            console.log('AuthProvider - Created user profile:', newProfile);
+            const user: User = {
+              id: newProfile.id,
+              email: newProfile.email,
+              name: newProfile.name,
+              role: newProfile.role as UserRole,
+              hotelId: newProfile.hotel_id
+            };
+            setUser(user);
+          }
+        } else {
+          setUser(null);
+        }
       } else if (userProfile) {
         console.log('AuthProvider - User profile found:', userProfile);
         const user: User = {
@@ -122,7 +155,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (data.user) {
         console.log('AuthProvider - Login successful');
-        // Don't manually fetch profile here - let the auth state change handle it
+        // The auth state change will handle profile fetching
         return true;
       }
       
@@ -145,6 +178,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password: userData.password,
         options: {
           emailRedirectTo: `${window.location.origin}/login`,
+          data: {
+            name: userData.name,
+            role: userData.role
+          }
         }
       });
 
@@ -159,7 +196,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: false, error: 'Failed to create user account' };
       }
 
-      // Create user profile
+      // Create user profile immediately after signup
       try {
         const { error: profileError } = await supabase
           .from('users')
@@ -177,8 +214,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (profileError) {
           console.error('AuthProvider - Profile creation error:', profileError);
-          // Don't fail the signup if profile creation fails - user can still verify email
-          console.log('AuthProvider - Continuing with signup despite profile error');
+          // Don't fail the signup completely, profile can be created later
+        } else {
+          console.log('AuthProvider - User profile created successfully');
         }
       } catch (profileError) {
         console.error('AuthProvider - Profile creation exception:', profileError);
