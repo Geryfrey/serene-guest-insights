@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
@@ -87,7 +86,7 @@ export default function Landing() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // If logged in, redirect to dashboard
-  if (isAuthenticated && user?.role !== 'guest') {
+  if (isAuthenticated && user) {
     return <Navigate to="/dashboard" replace />;
   }
 
