@@ -1,9 +1,10 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { ArrowRight, BarChart, BellRing, CheckCircle, Image, Users, BookOpen, Mail, Menu, X } from "lucide-react";
-import { Link, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 // Dummy logos for hotel partners - use your own in production!
 const hotels = [
@@ -84,6 +85,14 @@ const navigationLinks = [
 export default function Landing() {
   const { isAuthenticated, user, isLoading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Handle redirect to dashboard if logged in
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, user, isLoading, navigate]);
 
   // Show loading state while auth is being determined
   if (isLoading) {
@@ -94,9 +103,13 @@ export default function Landing() {
     );
   }
 
-  // If logged in, redirect to dashboard
+  // Don't render the landing page if we're authenticated (let useEffect handle redirect)
   if (isAuthenticated && user) {
-    return <Navigate to="/dashboard" replace />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="text-lg">Redirecting...</div>
+      </div>
+    );
   }
 
   return (
