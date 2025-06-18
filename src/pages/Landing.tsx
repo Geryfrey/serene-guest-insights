@@ -287,13 +287,13 @@ export default function Landing() {
           <div className="md:w-2/3 space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold animate-slide-up">Ready to transform your hotel's reputation?</h2>
             <p className="text-xl font-medium text-orange-100 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              Contact us or join other hotels using Serene Insights to create remarkable guest experiences.
+              Sign up today or join other hotels using Serene Insights to create remarkable guest experiences.
             </p>
           </div>
           <div className="md:w-1/3 flex flex-col gap-4 w-full md:w-auto animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <Button asChild size="lg" className="bg-white text-orange-600 hover:bg-orange-50 font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105 duration-200">
-              <Link to="/contact" className="flex items-center justify-center">
-                Contact Us
+              <Link to="/signup" className="flex items-center justify-center">
+                Sign Up
                 <Mail className="ml-2 h-5 w-5" />
               </Link>
             </Button>
