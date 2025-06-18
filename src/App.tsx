@@ -26,7 +26,12 @@ const ProtectedRoute = ({
   children: React.ReactNode; 
   allowedRoles?: Array<"hotel_manager" | "service_manager" | "food_manager" | "facilities_manager">;
 }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isLoading } = useAuth();
+  
+  // Show loading state while auth is being determined
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
