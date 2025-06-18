@@ -1,10 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { ArrowRight, BarChart, BellRing, CheckCircle, Image, Users, BookOpen, Mail, Menu, X } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useState } from "react";
 
 // Hotel logos with actual images
 const hotels = [
@@ -85,17 +84,8 @@ const navigationLinks = [
 export default function Landing() {
   const { isAuthenticated, user, isLoading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
 
   console.log('Landing - isLoading:', isLoading, 'isAuthenticated:', isAuthenticated, 'user:', user);
-
-  // Handle redirect to dashboard if logged in - with dependency array to prevent infinite loops
-  useEffect(() => {
-    if (!isLoading && isAuthenticated && user) {
-      console.log('Landing - Redirecting authenticated user to dashboard');
-      navigate("/dashboard", { replace: true });
-    }
-  }, [isAuthenticated, user, isLoading, navigate]);
 
   // Show loading state while auth is being determined
   if (isLoading) {
@@ -107,14 +97,10 @@ export default function Landing() {
     );
   }
 
-  // Don't render the landing page content if we're authenticated (useEffect will handle redirect)
+  // Redirect authenticated users to dashboard
   if (isAuthenticated && user) {
-    console.log('Landing - User is authenticated, should redirect');
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
-        <div className="text-lg">Redirecting to dashboard...</div>
-      </div>
-    );
+    console.log('Landing - Redirecting authenticated user to dashboard');
+    return <Navigate to="/dashboard" replace />;
   }
 
   console.log('Landing - Rendering landing page for unauthenticated user');

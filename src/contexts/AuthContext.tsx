@@ -38,9 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    // Add a small delay to prevent render loops
-    const timer = setTimeout(initializeAuth, 100);
-    return () => clearTimeout(timer);
+    // Initialize immediately
+    initializeAuth();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -48,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     
     try {
-      // Mock users for testing
+      // Mock users with correct roles that match ProtectedRoute expectations
       const mockUsers = [
         { id: '1', email: 'admin@luxuryhotel.com', name: 'Hotel Manager', role: 'hotel_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
         { id: '2', email: 'service@luxuryhotel.com', name: 'Service Manager', role: 'service_manager' as UserRole, hotelId: '550e8400-e29b-41d4-a716-446655440000' },
