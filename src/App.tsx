@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import FeedbackPage from "./pages/FeedbackPage";
 import Reports from "./pages/Reports";
@@ -19,10 +21,10 @@ const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ 
   children, 
-  allowedRoles = ["admin", "manager"]
+  allowedRoles = ["hotel_manager", "service_manager", "food_manager", "facilities_manager"]
 }: { 
   children: React.ReactNode; 
-  allowedRoles?: Array<"admin" | "manager" | "guest">;
+  allowedRoles?: Array<"hotel_manager" | "service_manager" | "food_manager" | "facilities_manager">;
 }) => {
   const { isAuthenticated, user } = useAuth();
   
@@ -48,6 +50,7 @@ const App = () => (
             {/* Public routes */}
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/feedback" element={<GuestFeedback />} />
             <Route path="/feedback/:hotelId" element={<GuestFeedback />} />
             <Route path="/contact" element={<Contact />} />
@@ -65,7 +68,7 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/admin" element={
-              <ProtectedRoute allowedRoles={["admin"]}>
+              <ProtectedRoute allowedRoles={["hotel_manager"]}>
                 <AdminPanel />
               </ProtectedRoute>
             } />

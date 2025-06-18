@@ -34,41 +34,39 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 h-16 border-b border-border bg-card z-50 px-4">
       <div className="h-full max-w-screen-2xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
-          <Link to={user.role === 'guest' ? '/' : '/dashboard'} className="text-2xl font-serif font-semibold mr-8">
+          <Link to="/dashboard" className="text-2xl font-serif font-semibold mr-8">
             <span className="text-gradient">Serene</span>
             <span className="text-gradient-gold ml-1">Insights</span>
           </Link>
           
-          {user.role !== 'guest' && (
-            <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              to="/dashboard"
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/feedback"
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
+              Feedback
+            </Link>
+            <Link
+              to="/reports"
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
+              Reports
+            </Link>
+            {user.role === 'hotel_manager' && (
               <Link
-                to="/dashboard"
+                to="/admin"
                 className="text-sm font-medium transition-colors hover:text-primary"
               >
-                Dashboard
+                Admin Panel
               </Link>
-              <Link
-                to="/feedback"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Feedback
-              </Link>
-              <Link
-                to="/reports"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Reports
-              </Link>
-              {user.role === 'admin' && (
-                <Link
-                  to="/admin"
-                  className="text-sm font-medium transition-colors hover:text-primary"
-                >
-                  Admin Panel
-                </Link>
-              )}
-            </nav>
-          )}
+            )}
+          </nav>
         </div>
         
         <div className="flex items-center gap-2">
@@ -116,6 +114,9 @@ export default function Header() {
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">{user.name}</p>
                   <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                  <p className="text-xs leading-none text-muted-foreground capitalize">
+                    {user.role.replace('_', ' ')}
+                  </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

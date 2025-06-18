@@ -1,5 +1,4 @@
-
-export type UserRole = 'guest' | 'manager' | 'admin';
+export type UserRole = 'hotel_manager' | 'service_manager' | 'food_manager' | 'facilities_manager';
 
 export interface User {
   id: string;
@@ -7,6 +6,7 @@ export interface User {
   email: string;
   role: UserRole;
   hotelId?: string;
+  category?: 'service' | 'food_quality' | 'facilities' | 'general';
 }
 
 export interface Feedback {

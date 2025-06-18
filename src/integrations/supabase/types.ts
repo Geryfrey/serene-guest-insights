@@ -60,6 +60,27 @@ export type Database = {
         }
         Relationships: []
       }
+      hotels: {
+        Row: {
+          created_at: string | null
+          id: string
+          location: string | null
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          location?: string | null
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
       keywords: {
         Row: {
           id: number
@@ -99,6 +120,50 @@ export type Database = {
         }
         Relationships: []
       }
+      users: {
+        Row: {
+          category: Database["public"]["Enums"]["category_type"] | null
+          created_at: string | null
+          email: string
+          hotel_id: string | null
+          id: string
+          name: string
+          password_hash: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string | null
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["category_type"] | null
+          created_at?: string | null
+          email: string
+          hotel_id?: string | null
+          id?: string
+          name: string
+          password_hash: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["category_type"] | null
+          created_at?: string | null
+          email?: string
+          hotel_id?: string | null
+          id?: string
+          name?: string
+          password_hash?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_users_hotel"
+            columns: ["hotel_id"]
+            isOneToOne: false
+            referencedRelation: "hotels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -107,7 +172,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      category_type: "service" | "food_quality" | "facilities" | "general"
+      user_role:
+        | "hotel_manager"
+        | "service_manager"
+        | "food_manager"
+        | "facilities_manager"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -222,6 +292,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      category_type: ["service", "food_quality", "facilities", "general"],
+      user_role: [
+        "hotel_manager",
+        "service_manager",
+        "food_manager",
+        "facilities_manager",
+      ],
+    },
   },
 } as const

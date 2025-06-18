@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -91,7 +91,7 @@ export default function LoginForm() {
             />
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col space-y-4">
           <Button
             type="submit"
             className="w-full bg-gradient-to-r from-navy-700 to-navy-600 hover:from-navy-800 hover:to-navy-700"
@@ -99,6 +99,13 @@ export default function LoginForm() {
           >
             {isLoading ? "Signing in..." : "Sign In"}
           </Button>
+          
+          <div className="text-center text-sm">
+            <span className="text-muted-foreground">Don't have an account? </span>
+            <Link to="/signup" className="text-primary underline-offset-4 hover:underline">
+              Sign up here
+            </Link>
+          </div>
         </CardFooter>
       </form>
     </Card>
