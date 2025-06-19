@@ -1,4 +1,3 @@
-
 import Header from "@/components/layout/Header";
 import PageLayout from "@/components/layout/PageLayout";
 import SentimentCard from "@/components/dashboard/SentimentCard";
@@ -22,7 +21,7 @@ export default function Dashboard() {
     return (
       <>
         <Header />
-        <PageLayout className="pt-20 p-4 md:p-6 max-w-screen-2xl mx-auto bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
+        <PageLayout className="p-4 md:p-6 max-w-screen-2xl mx-auto bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="relative">
@@ -42,7 +41,7 @@ export default function Dashboard() {
     return (
       <>
         <Header />
-        <PageLayout className="pt-20 p-4 md:p-6 max-w-screen-2xl mx-auto bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
+        <PageLayout className="p-4 md:p-6 max-w-screen-2xl mx-auto bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
           <div className="flex items-center justify-center h-64">
             <div className="text-center bg-white rounded-2xl shadow-xl p-8 border border-red-100">
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-6" />
@@ -86,7 +85,7 @@ export default function Dashboard() {
   return (
     <>
       <Header />
-      <PageLayout className="pt-20 p-4 md:p-6 max-w-screen-2xl mx-auto bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
+      <PageLayout className="p-4 md:p-6 max-w-screen-2xl mx-auto bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
         {/* Header Section */}
         <div className="mb-8 bg-white rounded-2xl shadow-lg border border-slate-200/60 p-6">
           <div className="flex items-center gap-4 mb-4">

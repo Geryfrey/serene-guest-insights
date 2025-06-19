@@ -45,24 +45,48 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
     
     try {
       // Insert into the existing feedback table
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('feedback')
         .insert({
           original_review: text.trim(),
           cleaned_review: text.trim(),
           review_length: text.trim().length,
-          category: 'general', // default category
-          sentiment: null // will be analyzed later
-        });
+          category: 'general', // Will be updated by ML analysis
+          sentiment: null // Will be updated by ML analysis
+        })
+        .select()
+        .single();
       
       if (error) {
         console.error('Supabase error:', error);
         throw error;
       }
+
+      console.log('Feedback inserted successfully:', data);
+
+      // Now trigger ML analysis
+      try {
+        const { error: analysisError } = await supabase.functions.invoke('analyze-feedback', {
+          body: {
+            feedbackId: data.id,
+            text: text.trim()
+          }
+        });
+
+        if (analysisError) {
+          console.error('Analysis error:', analysisError);
+          // Don't fail the whole submission if analysis fails
+        } else {
+          console.log('Feedback analysis triggered successfully');
+        }
+      } catch (analysisError) {
+        console.error('Failed to trigger analysis:', analysisError);
+        // Continue - feedback was saved even if analysis failed
+      }
       
       toast({
         title: "Success",
-        description: "Your feedback has been submitted successfully!",
+        description: "Your feedback has been submitted and is being analyzed!",
       });
       
       onSubmit({
@@ -70,6 +94,12 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
         text: text.trim(),
         contactInfo: contactInfo.trim() || undefined
       });
+
+      // Reset form
+      setRating(null);
+      setText("");
+      setContactInfo("");
+      
     } catch (error) {
       console.error('Error submitting feedback:', error);
       toast({

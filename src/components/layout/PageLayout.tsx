@@ -14,7 +14,7 @@ export default function PageLayout({ children, className }: PageLayoutProps) {
   return (
     <div className={cn(
       'min-h-screen bg-background',
-      isAuthenticated ? 'pt-16' : '',
+      isAuthenticated ? 'pt-20' : '', // Increased from pt-16 to pt-20 for better clearance
       className
     )}>
       {children}
