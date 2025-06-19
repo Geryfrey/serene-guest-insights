@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface FeedbackFormProps {
   hotelId: string;
@@ -43,21 +44,17 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/submit-review', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          review: text,
+      const { error } = await supabase
+        .from('guest_feedback')
+        .insert({
+          hotel_id: hotelId,
           rating,
-          hotelId,
-          contactInfo: contactInfo.trim() || undefined
-        }),
-      });
+          review: text.trim(),
+          contact_info: contactInfo.trim() || null
+        });
       
-      if (!response.ok) {
-        throw new Error('Failed to submit review');
+      if (error) {
+        throw error;
       }
       
       toast({

@@ -60,6 +60,33 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_feedback: {
+        Row: {
+          contact_info: string | null
+          created_at: string
+          hotel_id: string
+          id: string
+          rating: number
+          review: string
+        }
+        Insert: {
+          contact_info?: string | null
+          created_at?: string
+          hotel_id: string
+          id?: string
+          rating: number
+          review: string
+        }
+        Update: {
+          contact_info?: string | null
+          created_at?: string
+          hotel_id?: string
+          id?: string
+          rating?: number
+          review?: string
+        }
+        Relationships: []
+      }
       hotels: {
         Row: {
           created_at: string | null
