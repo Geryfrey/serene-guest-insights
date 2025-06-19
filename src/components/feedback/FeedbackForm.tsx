@@ -44,16 +44,19 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
     setIsSubmitting(true);
     
     try {
+      // Insert into the existing feedback table
       const { error } = await supabase
-        .from('guest_feedback')
+        .from('feedback')
         .insert({
-          hotel_id: hotelId,
-          rating,
-          review: text.trim(),
-          contact_info: contactInfo.trim() || null
+          original_review: text.trim(),
+          cleaned_review: text.trim(),
+          review_length: text.trim().length,
+          category: 'general', // default category
+          sentiment: null // will be analyzed later
         });
       
       if (error) {
+        console.error('Supabase error:', error);
         throw error;
       }
       
