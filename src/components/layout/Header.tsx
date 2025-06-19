@@ -48,7 +48,7 @@ export default function Header() {
   if (!user) return null;
   
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 border-b border-border bg-card z-50 px-4 animate-fade-in backdrop-blur-sm">
+    <header className="fixed top-0 left-0 right-0 h-16 border-b border-border bg-card/95 backdrop-blur-sm z-50 px-4 shadow-sm">
       <div className="h-full max-w-screen-2xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           <Link to={getDashboardRoute()} className="text-2xl font-serif font-semibold mr-8 hover:scale-105 transition-transform duration-200">

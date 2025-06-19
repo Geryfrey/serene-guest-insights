@@ -20,8 +20,9 @@ serve(async (req) => {
 
     const { feedbackId, text } = await req.json()
 
-    // Here you would call your ML model/service to analyze the feedback
-    // For now, I'll simulate the analysis - replace this with your actual ML API call
+    console.log('Analyzing feedback:', { feedbackId, text })
+
+    // REPLACE THIS SECTION WITH YOUR ACTUAL ML API CALLS
     const analysisResult = await analyzeFeedbackWithML(text)
     
     // Update the feedback record with analysis results
@@ -35,8 +36,11 @@ serve(async (req) => {
       .eq('id', feedbackId)
 
     if (error) {
+      console.error('Database update error:', error)
       throw error
     }
+
+    console.log('Feedback analysis completed:', analysisResult)
 
     return new Response(
       JSON.stringify({ success: true, analysis: analysisResult }),
@@ -55,18 +59,76 @@ serve(async (req) => {
   }
 })
 
-// Replace this function with your actual ML analysis
+// REPLACE THIS ENTIRE FUNCTION WITH YOUR ACTUAL ML API CALLS
 async function analyzeFeedbackWithML(text: string) {
-  // This is where you'd call your existing ML model
-  // For demonstration, I'm returning mock analysis
-  // You should replace this with calls to your actual ML pipeline
+  console.log('Starting ML analysis for text:', text)
   
+  // OPTION 1: If you have a REST API endpoint for your ML model
+  /*
+  try {
+    const response = await fetch('YOUR_ML_API_ENDPOINT', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Deno.env.get('YOUR_ML_API_KEY')}`, // Add your API key as a Supabase secret
+        // Add any other required headers
+      },
+      body: JSON.stringify({
+        text: text,
+        // Add any other parameters your ML API expects
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error(`ML API error: ${response.status} ${response.statusText}`)
+    }
+
+    const mlResult = await response.json()
+    
+    // Transform the ML API response to match your database schema
+    return {
+      sentiment: mlResult.sentiment, // Adjust field names based on your ML API response
+      category: mlResult.category,   // Adjust field names based on your ML API response
+      confidence: mlResult.confidence
+    }
+  } catch (error) {
+    console.error('ML API call failed:', error)
+    throw error
+  }
+  */
+
+  // OPTION 2: If you have a Python ML service running locally or on a server
+  /*
+  try {
+    const response = await fetch('http://your-ml-service:port/analyze', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text })
+    })
+
+    const result = await response.json()
+    return {
+      sentiment: result.sentiment,
+      category: result.category,
+      confidence: result.confidence
+    }
+  } catch (error) {
+    console.error('ML service call failed:', error)
+    throw error
+  }
+  */
+
+  // CURRENT MOCK IMPLEMENTATION - REMOVE THIS WHEN YOU IMPLEMENT YOUR ACTUAL ML CALLS
   const sentiments = ['positive', 'negative', 'neutral']
   const categories = ['service', 'food_quality', 'facilities', 'general']
   
   // Mock sentiment analysis (replace with your ML model)
   const sentiment = sentiments[Math.floor(Math.random() * sentiments.length)]
   const category = categories[Math.floor(Math.random() * categories.length)]
+  
+  console.log('Mock analysis result:', { sentiment, category })
   
   return {
     sentiment,

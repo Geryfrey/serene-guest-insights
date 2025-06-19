@@ -14,10 +14,14 @@ export default function PageLayout({ children, className }: PageLayoutProps) {
   return (
     <div className={cn(
       'min-h-screen bg-background',
-      isAuthenticated ? 'pt-20' : '', // Increased from pt-16 to pt-20 for better clearance
+      isAuthenticated ? 'mt-16' : '', // Use margin-top instead of padding-top
       className
     )}>
-      {children}
+      <div className={cn(
+        isAuthenticated ? 'pt-6' : '', // Additional padding for better spacing
+      )}>
+        {children}
+      </div>
     </div>
   );
 }
