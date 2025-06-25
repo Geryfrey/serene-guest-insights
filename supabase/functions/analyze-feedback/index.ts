@@ -22,7 +22,7 @@ serve(async (req) => {
 
     console.log('Analyzing feedback:', { feedbackId, text })
 
-    // REPLACE THIS SECTION WITH YOUR ACTUAL ML API CALLS
+    // Call your actual ML API
     const analysisResult = await analyzeFeedbackWithML(text)
     
     // Update the feedback record with analysis results
@@ -31,7 +31,6 @@ serve(async (req) => {
       .update({
         sentiment: analysisResult.sentiment,
         category: analysisResult.category,
-        // Add any other fields your ML model provides
       })
       .eq('id', feedbackId)
 
@@ -59,19 +58,15 @@ serve(async (req) => {
   }
 })
 
-// REPLACE THIS ENTIRE FUNCTION WITH YOUR ACTUAL ML API CALLS
+// Call your actual ML API at localhost:5000
 async function analyzeFeedbackWithML(text: string) {
   console.log('Starting ML analysis for text:', text)
   
-  // OPTION 1: If you have a REST API endpoint for your ML model
-  /*
   try {
-    const response = await fetch('YOUR_ML_API_ENDPOINT', {
+    const response = await fetch('http://localhost:5000/api/insights', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${Deno.env.get('YOUR_ML_API_KEY')}`, // Add your API key as a Supabase secret
-        // Add any other required headers
       },
       body: JSON.stringify({
         text: text,
@@ -84,55 +79,23 @@ async function analyzeFeedbackWithML(text: string) {
     }
 
     const mlResult = await response.json()
+    console.log('ML API response:', mlResult)
     
     // Transform the ML API response to match your database schema
+    // Adjust these field mappings based on your ML API's actual response structure
     return {
-      sentiment: mlResult.sentiment, // Adjust field names based on your ML API response
-      category: mlResult.category,   // Adjust field names based on your ML API response
-      confidence: mlResult.confidence
+      sentiment: mlResult.sentiment || 'neutral', // Adjust field name if needed
+      category: mlResult.category || 'general',   // Adjust field name if needed
+      confidence: mlResult.confidence || 0.5
     }
   } catch (error) {
     console.error('ML API call failed:', error)
-    throw error
-  }
-  */
-
-  // OPTION 2: If you have a Python ML service running locally or on a server
-  /*
-  try {
-    const response = await fetch('http://your-ml-service:port/analyze', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text })
-    })
-
-    const result = await response.json()
+    
+    // Fallback to neutral values if ML API fails
     return {
-      sentiment: result.sentiment,
-      category: result.category,
-      confidence: result.confidence
+      sentiment: 'neutral',
+      category: 'general',
+      confidence: 0.0
     }
-  } catch (error) {
-    console.error('ML service call failed:', error)
-    throw error
-  }
-  */
-
-  // CURRENT MOCK IMPLEMENTATION - REMOVE THIS WHEN YOU IMPLEMENT YOUR ACTUAL ML CALLS
-  const sentiments = ['positive', 'negative', 'neutral']
-  const categories = ['service', 'food_quality', 'facilities', 'general']
-  
-  // Mock sentiment analysis (replace with your ML model)
-  const sentiment = sentiments[Math.floor(Math.random() * sentiments.length)]
-  const category = categories[Math.floor(Math.random() * categories.length)]
-  
-  console.log('Mock analysis result:', { sentiment, category })
-  
-  return {
-    sentiment,
-    category,
-    confidence: Math.random() * 0.5 + 0.5 // Random confidence between 0.5-1.0
   }
 }

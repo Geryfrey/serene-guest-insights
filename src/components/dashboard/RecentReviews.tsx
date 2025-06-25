@@ -54,6 +54,16 @@ export default function RecentReviews({ hotelId }: RecentReviewsProps) {
     }
   };
 
+  const generateRatingFromSentiment = (sentiment: string) => {
+    // Generate a rating based on sentiment analysis
+    switch (sentiment?.toLowerCase()) {
+      case 'positive': return 5;
+      case 'negative': return 2;
+      case 'neutral': return 3;
+      default: return 3;
+    }
+  };
+
   const generateMockRating = () => {
     // Generate a rating based on sentiment if available
     return Math.floor(Math.random() * 2) + 4; // 4-5 stars for demo
@@ -106,7 +116,7 @@ export default function RecentReviews({ hotelId }: RecentReviewsProps) {
           <p className="text-center text-muted-foreground py-4">No recent reviews</p>
         ) : (
           feedbackData.map((feedback) => {
-            const rating = generateMockRating();
+            const rating = generateRatingFromSentiment(feedback.sentiment);
             return (
               <div key={feedback.id} className="border rounded-lg p-4 space-y-2 hover:bg-slate-50 transition-colors">
                 <div className="flex items-center justify-between">

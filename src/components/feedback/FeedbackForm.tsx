@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -44,14 +43,14 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
     setIsSubmitting(true);
     
     try {
-      // Insert into the existing feedback table
+      // Insert into the existing feedback table with null sentiment initially
       const { data, error } = await supabase
         .from('feedback')
         .insert({
           original_review: text.trim(),
           cleaned_review: text.trim(),
           review_length: text.trim().length,
-          category: 'general', // Will be updated by ML analysis
+          category: null, // Will be updated by ML analysis
           sentiment: null // Will be updated by ML analysis
         })
         .select()
@@ -64,9 +63,10 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
 
       console.log('Feedback inserted successfully:', data);
 
-      // Now trigger ML analysis
+      // Now trigger ML analysis - this is critical for the system to work
       try {
-        const { error: analysisError } = await supabase.functions.invoke('analyze-feedback', {
+        console.log('Triggering ML analysis for feedback ID:', data.id);
+        const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-feedback', {
           body: {
             feedbackId: data.id,
             text: text.trim()
@@ -75,18 +75,23 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
 
         if (analysisError) {
           console.error('Analysis error:', analysisError);
-          // Don't fail the whole submission if analysis fails
+          throw new Error('Failed to analyze feedback: ' + analysisError.message);
         } else {
-          console.log('Feedback analysis triggered successfully');
+          console.log('Feedback analysis completed successfully:', analysisData);
         }
       } catch (analysisError) {
         console.error('Failed to trigger analysis:', analysisError);
-        // Continue - feedback was saved even if analysis failed
+        // Since ML analysis is required, we should show an error
+        toast({
+          title: "Warning",
+          description: "Feedback saved but analysis failed. Please contact support.",
+          variant: "destructive",
+        });
       }
       
       toast({
         title: "Success",
-        description: "Your feedback has been submitted and is being analyzed!",
+        description: "Your feedback has been submitted and analyzed successfully!",
       });
       
       onSubmit({
@@ -174,7 +179,7 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
             className="w-full bg-gradient-to-r from-navy-700 to-navy-600 hover:from-navy-800 hover:to-navy-700"
             disabled={isSubmitting || rating === null || !text.trim()}
           >
-            {isSubmitting ? "Submitting..." : "Submit Feedback"}
+            {isSubmitting ? "Analyzing feedback..." : "Submit Feedback"}
           </Button>
         </CardFooter>
       </form>
