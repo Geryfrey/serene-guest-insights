@@ -44,30 +44,43 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
     setIsSubmitting(true);
     
     try {
-      // Insert into the existing feedback table with null sentiment initially
+      console.log('Submitting feedback:', {
+        hotel_id: hotelId,
+        rating,
+        original_review: text.trim(),
+        cleaned_review: text.trim(),
+        review_length: text.trim().length,
+        contact_info: contactInfo.trim() || null
+      });
+
+      // Insert into the feedback table
       const { data, error } = await supabase
         .from('feedback')
         .insert({
+          hotel_id: hotelId,
+          rating: rating,
           original_review: text.trim(),
           cleaned_review: text.trim(),
           review_length: text.trim().length,
-          category: null, // Will be updated by ML analysis
-          sentiment: null // Will be updated by ML analysis
+          contact_info: contactInfo.trim() || null,
+          // Leave sentiment and category as null initially
+          sentiment: null,
+          category: null
         })
         .select()
         .single();
       
       if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+        console.error('Supabase insertion error:', error);
+        throw new Error(`Database error: ${error.message}`);
       }
 
       console.log('Feedback inserted successfully:', data);
 
-      // Now trigger ML analysis - this is critical for the system to work
+      // Try to trigger ML analysis, but don't fail if it doesn't work
       try {
-        console.log('Triggering ML analysis for feedback ID:', data.id);
-        const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-feedback', {
+        console.log('Attempting to trigger ML analysis for feedback ID:', data.id);
+        const { error: analysisError } = await supabase.functions.invoke('analyze-feedback', {
           body: {
             feedbackId: data.id,
             text: text.trim()
@@ -75,24 +88,17 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
         });
 
         if (analysisError) {
-          console.error('Analysis error:', analysisError);
-          throw new Error('Failed to analyze feedback: ' + analysisError.message);
+          console.warn('ML analysis failed, but feedback was saved:', analysisError);
         } else {
-          console.log('Feedback analysis completed successfully:', analysisData);
+          console.log('ML analysis triggered successfully');
         }
       } catch (analysisError) {
-        console.error('Failed to trigger analysis:', analysisError);
-        // Since ML analysis is required, we should show an error
-        toast({
-          title: "Warning",
-          description: "Feedback saved but analysis failed. Please contact support.",
-          variant: "destructive",
-        });
+        console.warn('ML analysis failed, but feedback was saved:', analysisError);
       }
       
       toast({
         title: "Success",
-        description: "Your feedback has been submitted and analyzed successfully!",
+        description: "Your feedback has been submitted successfully!",
       });
       
       onSubmit({
@@ -108,9 +114,13 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
       
     } catch (error) {
       console.error('Error submitting feedback:', error);
+      
+      // Show specific error message if available
+      const errorMessage = error instanceof Error ? error.message : "Failed to submit feedback. Please try again.";
+      
       toast({
         title: "Error",
-        description: "Failed to submit feedback. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -192,7 +202,7 @@ export default function FeedbackForm({ hotelId, onSubmit }: FeedbackFormProps) {
             {isSubmitting ? (
               <div className="flex items-center gap-3">
                 <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                Analyzing feedback...
+                Submitting feedback...
               </div>
             ) : (
               "Submit Feedback"
