@@ -22,7 +22,7 @@ serve(async (req) => {
 
     console.log('Analyzing feedback:', { feedbackId, text })
 
-    // Call your actual ML API
+    // Call the new ML API
     const analysisResult = await analyzeFeedbackWithML(text)
     
     // Update the feedback record with analysis results
@@ -58,19 +58,18 @@ serve(async (req) => {
   }
 })
 
-// Call your actual ML API at localhost:5000
+// Call the new ML API at https://final-year-nl4u.onrender.com/
 async function analyzeFeedbackWithML(text: string) {
   console.log('Starting ML analysis for text:', text)
   
   try {
-    const response = await fetch('http://localhost:5000/api/insights', {
+    const response = await fetch('https://final-year-nl4u.onrender.com/api/insights', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         text: text,
-        // Add any other parameters your ML API expects
       })
     })
 
@@ -82,10 +81,9 @@ async function analyzeFeedbackWithML(text: string) {
     console.log('ML API response:', mlResult)
     
     // Transform the ML API response to match your database schema
-    // Adjust these field mappings based on your ML API's actual response structure
     return {
-      sentiment: mlResult.sentiment || 'neutral', // Adjust field name if needed
-      category: mlResult.category || 'general',   // Adjust field name if needed
+      sentiment: mlResult.sentiment || 'neutral',
+      category: mlResult.category || 'general',
       confidence: mlResult.confidence || 0.5
     }
   } catch (error) {
