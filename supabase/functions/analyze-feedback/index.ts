@@ -58,12 +58,12 @@ serve(async (req) => {
   }
 })
 
-// Call the ML API at http://127.0.0.1:5000/
+// Call the ML API at http://localhost:5000/api/insights
 async function analyzeFeedbackWithML(text: string) {
   console.log('Starting ML analysis for text:', text)
   
   try {
-    const response = await fetch('http://127.0.0.1:5000/api/insights', {
+    const response = await fetch('http://localhost:5000/api/insights', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
