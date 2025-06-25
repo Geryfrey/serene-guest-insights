@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 
 interface Anomaly {
@@ -66,10 +67,10 @@ export interface InsightsData {
 }
 
 const fetchInsights = async (): Promise<InsightsData> => {
-  console.log('Fetching insights from new API endpoint...');
+  console.log('Fetching insights from local API endpoint...');
 
   try {
-    const response = await fetch('https://final-year-nl4u.onrender.com/api/insights', {
+    const response = await fetch('http://127.0.0.1:5000/api/insights', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

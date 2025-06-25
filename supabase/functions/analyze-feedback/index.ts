@@ -22,7 +22,7 @@ serve(async (req) => {
 
     console.log('Analyzing feedback:', { feedbackId, text })
 
-    // Call the new ML API
+    // Call the ML API
     const analysisResult = await analyzeFeedbackWithML(text)
     
     // Update the feedback record with analysis results
@@ -58,12 +58,12 @@ serve(async (req) => {
   }
 })
 
-// Call the new ML API at https://final-year-nl4u.onrender.com/
+// Call the ML API at http://127.0.0.1:5000/
 async function analyzeFeedbackWithML(text: string) {
   console.log('Starting ML analysis for text:', text)
   
   try {
-    const response = await fetch('https://final-year-nl4u.onrender.com/api/insights', {
+    const response = await fetch('http://127.0.0.1:5000/api/insights', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
